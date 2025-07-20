@@ -1,7 +1,12 @@
 import React from "react";
 import Image from "next/image";
 
-function ViewerChat({ padding, flexDirection, authorNameStyle }) {
+function ViewerChat({
+  padding,
+  flexDirection,
+  authorNameStyle,
+  authorMsgStyle,
+}) {
   const previewStyle = {
     padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
     transition: "padding 0.2s",
@@ -31,7 +36,9 @@ function ViewerChat({ padding, flexDirection, authorNameStyle }) {
             Asep Magelang
           </div>
         </rz-name-wrapper>
-        <span id="message">Hallo aku viewer biasa</span>
+        <span id="message" style={authorMsgStyle}>
+          Hallo aku viewer biasa
+        </span>
       </rz-chat-content>
     </rz-chat-wrapper>
   );

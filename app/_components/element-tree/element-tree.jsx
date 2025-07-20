@@ -1,5 +1,5 @@
 "use client";
-import { ChevronDown, FolderClosed } from "lucide-react";
+import { ChevronDown, CircleCheck, FolderClosed } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 
 export default function ConfigSection({
@@ -39,12 +39,16 @@ export default function ConfigSection({
     <div>
       {/* Section Title */}
       <div
-        className={`flex items-center gap-3 pl-1 pr-2 py-2 ${
+        className={`flex items-center  pl-1  group hover:bg-gray-800/35 max-h-[30px] ${
           subSections.length > 0 ? "cursor-pointer" : ""
         }`}
-        onClick={() => subSections.length > 0 && setCollapsed((c) => !c)}
       >
-        <div className="text-xs flex gap-3 items-center flex-row uppercase tracking-widest text-gray-400 font-semibold flex-1">
+        <div
+          className={` flex gap-3 items-center flex-row  pr-2 py-2  tracking-widest  font-semibold flex-1 ${
+            !isSubsection ? "text-purple-500" : ""
+          }`}
+          onClick={() => setCollapsed(!collapsed)}
+        >
           {!isSubsection && (
             <ChevronDown
               size={16}
@@ -61,7 +65,7 @@ export default function ConfigSection({
             e.stopPropagation();
             setShowMenu((v) => !v);
           }}
-          className="ml-2 relative text-purple-600 cursor-pointer transition-all text-lg px-3 py-[1px] rounded-[7px] bg-purple-800/20 border border-purple-600 hover:bg-purple-800/60 duration-200"
+          className="ml-2 relative text-purple-600 cursor-pointer transition-all text-lg px-3 py-[1px] rounded-[7px] bg-purple-800/20 border border-purple-600 hover:bg-purple-800/60 duration-200 group-hover:block hidden"
           aria-label={`Add option to ${title}`}
         >
           +
@@ -74,7 +78,9 @@ export default function ConfigSection({
             {options.map((opt) => (
               <button
                 key={opt.value}
-                className="block w-full px-4 py-2 text-left text-gray-200 hover:bg-blue-900/30 disabled:opacity-50"
+                className={`w-full flex flex-row px-4 py-2 gap-3 items-center text-left text-gray-200 hover:bg-blue-900/30 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
+                  activeOptions.includes(opt.value) ? "text-green-500" : ""
+                }`}
                 onClick={() => {
                   onAddOption(opt.value);
                   setShowMenu(false);
@@ -82,6 +88,7 @@ export default function ConfigSection({
                 disabled={activeOptions.includes(opt.value)}
               >
                 {opt.label}
+                {activeOptions.includes(opt.value) && <CircleCheck size={16} />}
               </button>
             ))}
           </div>
@@ -93,7 +100,7 @@ export default function ConfigSection({
 
       {/* Subsections */}
       {subSections.length > 0 && !collapsed && (
-        <div className="ml-3 pl-5 border-l border-gray-700/80">
+        <div className="ml-3 pl-5 border-l border-gray-700/80 text-gray-400">
           {subSections.map((sub) => (
             <ConfigSection key={sub.title} {...sub} isSubsection={true} />
           ))}

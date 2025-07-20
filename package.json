@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@melloware/coloris": "^0.25.0",
     "lucide": "^0.525.0",
     "lucide-react": "^0.525.0",
     "next": "15.4.2",
