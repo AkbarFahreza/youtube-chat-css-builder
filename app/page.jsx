@@ -37,10 +37,10 @@ export default function Home() {
   // Content section state
   const [contentActive, setContentActive] = useState([]);
   const [padding, setPadding] = useState({
-    top: 8,
-    right: 8,
-    bottom: 8,
-    left: 8,
+    top: 2,
+    right: 2,
+    bottom: 2,
+    left: 2,
   });
   const [flexDirection, setFlexDirection] = useState("row");
 
@@ -49,33 +49,61 @@ export default function Home() {
   const [msgActive, setMsgActive] = useState([]);
   // background color
   const [bgColor, setBgColor] = useState("#ffffff");
-  // Font sizing
+  // name config
   const [nameFontSize, setNameFontSize] = useState(16);
+  const [namePadding, setNamePadding] = useState({
+    top: 2,
+    right: 2,
+    bottom: 2,
+    left: 2,
+  });
   const [msgFontSize, setMsgFontSize] = useState(16);
 
   // Compose CSS output for all active configs
   let cssOutput = "";
-  if (contentActive.includes("padding")) {
-    cssOutput += `yt-live-chat-message-renderer #content {\n  padding: ${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px;\n}\n\n`;
+
+  // =============================
+  // Viewer config
+  // =============================
+  if (
+    contentActive.includes("padding") ||
+    contentActive.includes("flexDirection")
+  ) {
+    cssOutput += `yt-live-chat-message-renderer #content {\n`;
+    if (contentActive.includes("padding")) {
+      cssOutput += `  padding: ${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px;\n`;
+    }
+    if (contentActive.includes("flexDirection")) {
+      cssOutput += `  display: flex;\n  flex-direction: ${flexDirection};\n`;
+    }
+    cssOutput += `}\n\n`;
   }
-  if (contentActive.includes("flexDirection")) {
-    cssOutput += `yt-live-chat-message-renderer #content {\n  display: flex;\n  flex-direction: ${flexDirection};\n}\n\n`;
+
+  //============= Viewer Name config =============
+  if (
+    nameActive.includes("nameFontSize") ||
+    nameActive.includes("namePadding") ||
+    nameActive.includes("bgColor")
+  ) {
+    cssOutput += `yt-live-chat-message-renderer #author-name {\n`;
+
+    if (nameActive.includes("nameFontSize")) {
+      cssOutput += `  font-size: ${nameFontSize}px;\n`;
+    }
+    if (nameActive.includes("namePadding")) {
+      cssOutput += `  padding: ${padding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px;\n`;
+    }
+    if (nameActive.includes("bgColor")) {
+      cssOutput += `  background-color: ${bgColor};\n`;
+    }
+    cssOutput += `}\n\n`;
   }
-  if (nameActive.includes("bgColor")) {
-    cssOutput += `yt-live-chat-message-renderer #author-name {\n  background-color: ${bgColor};\n}\n\n`;
-  }
-  if (nameActive.includes("nameFontSize")) {
-    cssOutput += `yt-live-chat-message-renderer #author-name {\n  font-size: ${nameFontSize}px;\n}\n\n`;
-  }
+
+  //============= Viewer Message config =============
   if (msgActive.includes("msgFontSize")) {
     cssOutput += `yt-live-chat-message-renderer #message {\n  font-size: ${msgFontSize}px;\n}\n\n`;
   }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(cssOutput.trim());
-    alert("CSS copied to clipboard!");
-  };
-  console.log(bgColor);
   return (
     <div className="flex flex-col min-h-[100vh] max-h-[100vh] overflow-hidden">
       <div className="py-4 px-6 bg-gray-800/40 w-full">hai</div>
@@ -102,42 +130,7 @@ export default function Home() {
                 options: [
                   { label: "Background Color", value: "bgColor" },
                   { label: "Font Size", value: "nameFontSize" },
-                ],
-                activeOptions: nameActive,
-                onAddOption: (opt) =>
-                  setNameActive((prev) =>
-                    prev.includes(opt) ? prev : [...prev, opt]
-                  ),
-              },
-              {
-                title: "Message",
-                options: [{ label: "Font Size", value: "msgFontSize" }],
-                activeOptions: msgActive,
-                onAddOption: (opt) =>
-                  setMsgActive((prev) =>
-                    prev.includes(opt) ? prev : [...prev, opt]
-                  ),
-              },
-            ]}
-          />
-          <ConfigSection
-            title="Moderator Chat"
-            options={[
-              { label: "Add Padding", value: "padding" },
-              { label: "Flex Direction", value: "flexDirection" },
-            ]}
-            activeOptions={contentActive}
-            onAddOption={(opt) =>
-              setContentActive((prev) =>
-                prev.includes(opt) ? prev : [...prev, opt]
-              )
-            }
-            subSections={[
-              {
-                title: "Name",
-                options: [
-                  { label: "Background Color", value: "bgColor" },
-                  { label: "Font Size", value: "nameFontSize" },
+                  { label: "Padding", value: "namePadding" },
                 ],
                 activeOptions: nameActive,
                 onAddOption: (opt) =>
@@ -172,6 +165,9 @@ export default function Home() {
               fontSize: nameActive.includes("nameFontSize")
                 ? `${nameFontSize}px`
                 : undefined,
+              padding: nameActive.includes("namePadding")
+                ? `${namePadding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px`
+                : undefined,
             }}
             authorMsgStyle={{
               fontSize: msgActive.includes("msgFontSize")
@@ -185,6 +181,8 @@ export default function Home() {
           setContentActive={setContentActive}
           padding={padding}
           setPadding={setPadding}
+          namePadding={namePadding}
+          setNamePadding={setNamePadding}
           flexDirection={flexDirection}
           setFlexDirection={setFlexDirection}
           nameActive={nameActive}

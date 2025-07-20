@@ -35,12 +35,7 @@ export default function ColorSelector({
   }, [onChange]);
 
   return (
-    <div className="w-full group flex flex-row justify-between py-5 border-b border-b-gray-800 items-center max-h-[50px]">
-      <X
-        className="cursor-pointer hidden mr-3 transition-all duration-200 group-hover:block bg-red-800/20 hover:bg-red-800/60 border border-red-500 text-red-500 rounded p-[4px] "
-        size={25}
-        onClick={onDelete}
-      />
+    <div className="w-full group flex flex-row justify-between py-5 border-b border-b-gray-800 items-center max-h-[50px] pl-3">
       <div className="flex flex-row items-center justify-between w-full">
         <p className="text-purple-400 font-bold">{label}</p>
         <div className="flex flex-row items-center   ">
@@ -50,10 +45,16 @@ export default function ColorSelector({
             data-coloris
             className="coloris"
             defaultValue={inputValue}
+            style={{ width: 90 }}
           />
           <div className={`w-[20px] h-[20px] bg-[${inputValue}]`}></div>
         </div>
       </div>
+      <X
+        className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
+        size={17}
+        onClick={onDelete}
+      />
     </div>
   );
 }

@@ -15,7 +15,8 @@
     "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-syntax-highlighter": "^15.6.1"
+    "react-syntax-highlighter": "^15.6.1",
+    "tailwind-scrollbar": "^4.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

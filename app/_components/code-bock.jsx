@@ -12,7 +12,7 @@ export default function CodeBlock({ code, language = "css" }) {
         borderRadius: "8px",
         padding: "16px",
         fontSize: "14px",
-        maxHeight: "200px",
+        maxHeight: "100px",
       }}
     >
       {code}

@@ -12,6 +12,8 @@ export default function ConfigWrapper({
   setContentActive,
   padding,
   setPadding,
+  namePadding,
+  setNamePadding,
   flexDirection,
   setFlexDirection,
   nameActive,
@@ -34,13 +36,15 @@ export default function ConfigWrapper({
   return (
     <div
       id="config-wrapper"
-      className="max-w-[400px] max-h-[100vh] overflow-y-scroll flex-1 border-l pt-6 border-gray-700 px-3"
+      className="max-w-[400px] max-h-[100vh]   flex-1 border-l pt-6 border-gray-700 px-3"
     >
       <ChatConfigPanel
         contentActive={contentActive}
         setContentActive={setContentActive}
         padding={padding}
         setPadding={setPadding}
+        namePadding={namePadding}
+        setNamePadding={setNamePadding}
         flexDirection={flexDirection}
         setFlexDirection={setFlexDirection}
         nameActive={nameActive}
@@ -55,34 +59,41 @@ export default function ConfigWrapper({
         setMsgFontSize={setMsgFontSize}
       />
       <div style={{ marginTop: 24 }}>
-        <h4 className="text-white font-semibold mb-2">CSS Output:</h4>
+        <div className="flex flex-row justify-between items-center ">
+          <h4 className="text-white font-semibold ">CSS Output:</h4>
+          <button
+            onClick={copyToClipboard}
+            className="text-purple-500 bg-purple-800/25 border border-purple-500 hover:bg-purple-800/60 cursor-pointer transition-all duration-200 rounded-lg px-4 py-1"
+          >
+            Copy CSS
+          </button>
+        </div>
         <CodeBlock code={cssOutput.trim()} language="css" />
-        <button
-          onClick={copyToClipboard}
-          className="text-purple-500 bg-purple-800/25 border border-purple-500 hover:bg-purple-800/60 cursor-pointer transition-all duration-200 rounded-lg px-4 py-2 mt-6"
-        >
-          Copy CSS
-        </button>
       </div>
     </div>
   );
 }
 
 function ChatConfigPanel({
+  // viewer chat wrapper
   contentActive,
   setContentActive,
   padding,
   setPadding,
   flexDirection,
   setFlexDirection,
+  // viewer Name config
   nameActive,
-  setNameActive,
-  msgActive,
-  setMsgActive,
   bgColor,
   setBgColor,
+  setNameActive,
+  namePadding,
+  setNamePadding,
   nameFontSize,
   setNameFontSize,
+  // viewer Message config
+  msgActive,
+  setMsgActive,
   msgFontSize,
   setMsgFontSize,
 }) {
@@ -92,7 +103,7 @@ function ChatConfigPanel({
   ];
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <div>
+    <div className="min-h-[62vh] max-h-[62vh] pr-3 overflow-y-scroll scrollbar">
       <div
         className="py-2 px-4 bg-gray-700/30 rounded-md flex flex-row justify-between items-center"
         onClick={() => setCollapsed(!collapsed)}
@@ -106,13 +117,28 @@ function ChatConfigPanel({
         />
       </div>
       {/* Content Configs */}
-      <div className={`${collapsed ? "hidden" : ""} px-6`}>
+      <div className={`${collapsed ? "hidden" : ""}`}>
         {contentActive.includes("padding") && (
-          <PaddingConfig padding={padding} setPadding={setPadding} />
+          <PaddingConfig
+            label="Content Padding"
+            padding={padding}
+            setPadding={setPadding}
+            onDelete={() => {
+              setPadding({
+                top: 2,
+                right: 2,
+                bottom: 2,
+                left: 2,
+              });
+              setContentActive((prev) =>
+                prev.filter((opt) => opt !== "padding")
+              );
+            }}
+          />
         )}
         {contentActive.includes("flexDirection") && (
           <BooleanConfig
-            label="Flex Direction"
+            label="Content Flex Direction"
             opts={FlexDirOpts}
             value={flexDirection}
             setValue={setFlexDirection}
@@ -125,9 +151,27 @@ function ChatConfigPanel({
           />
         )}
         {/* Name Wrapper Configs */}
+        {nameActive.includes("namePadding") && (
+          <PaddingConfig
+            label="Name Padding"
+            padding={namePadding}
+            setPadding={setNamePadding}
+            onDelete={() => {
+              setNamePadding({
+                top: 2,
+                right: 2,
+                bottom: 2,
+                left: 2,
+              }),
+                setNameActive((prev) =>
+                  prev.filter((opt) => opt !== "namePadding")
+                );
+            }}
+          />
+        )}
         {nameActive.includes("bgColor") && (
           <ColorSelector
-            label="Background Color"
+            label="Name Background Color"
             inputValue={bgColor}
             onChange={(e) => setBgColor(e.target.value)}
             onDelete={() => {
