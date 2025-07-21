@@ -16,7 +16,6 @@ function ViewerChat({
       flexDirection: flexDirection,
     }),
   };
-  console.log(authorNameStyle);
   return (
     <rz-chat-wrapper author-type="" className="items-center">
       <rz-author-photo id="author-photo">

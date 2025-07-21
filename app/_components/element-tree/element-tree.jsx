@@ -39,7 +39,7 @@ export default function ConfigSection({
     <div>
       {/* Section Title */}
       <div
-        className={`flex items-center  pl-1  group hover:bg-gray-800/35 max-h-[30px] ${
+        className={`flex items-center  pl-3 rounded-sm  group hover:bg-[#383838] max-h-[30px] ${
           subSections.length > 0 ? "cursor-pointer" : ""
         }`}
       >
@@ -65,7 +65,7 @@ export default function ConfigSection({
             e.stopPropagation();
             setShowMenu((v) => !v);
           }}
-          className="ml-2 relative text-purple-600 cursor-pointer transition-all text-lg px-3 py-[1px] rounded-[7px] bg-purple-800/20 border border-purple-600 hover:bg-purple-800/60 duration-200 group-hover:block hidden"
+          className="ml-2 relative text-purple-600 cursor-pointer transition-all text-2xl px-3 py-[1px] rounded-[7px] duration-200 group-hover:block hidden"
           aria-label={`Add option to ${title}`}
         >
           +
@@ -73,7 +73,7 @@ export default function ConfigSection({
         {showMenu && (
           <div
             ref={menuRef}
-            className="absolute w-fit mt-2 left-[290px] bg-[#23262F] border border-gray-800 rounded shadow-lg z-20 min-w-[140px]"
+            className="absolute w-fit mt-2 left-[220px] bg-secondary border border-white/20 rounded shadow-lg z-20 min-w-[140px]"
           >
             {options.map((opt) => (
               <button
@@ -100,7 +100,7 @@ export default function ConfigSection({
 
       {/* Subsections */}
       {subSections.length > 0 && !collapsed && (
-        <div className="ml-3 pl-5 border-l border-gray-700/80 text-gray-400">
+        <div className="ml-5 pl-2 border-l border-[#383838] text-gray-400">
           {subSections.map((sub) => (
             <ConfigSection key={sub.title} {...sub} isSubsection={true} />
           ))}

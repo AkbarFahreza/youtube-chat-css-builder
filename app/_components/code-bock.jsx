@@ -12,8 +12,10 @@ export default function CodeBlock({ code, language = "css" }) {
         borderRadius: "8px",
         padding: "16px",
         fontSize: "14px",
-        maxHeight: "100px",
+        minHeight: "75vh",
+        maxHeight: "75vh",
       }}
+      className="scrollbar select-text"
     >
       {code}
     </SyntaxHighlighter>

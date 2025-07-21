@@ -11,29 +11,7 @@ import {
 import ColorSelector from "./_components/config-panel/color-selector";
 import ConfigWrapper from "./_components/config-panel/config-wrapper";
 
-function FlexDirectionConfig({ flexDirection, setFlexDirection }) {
-  return (
-    <div style={{ padding: 16 }}>
-      <label>
-        Flex Direction:&nbsp;
-        <select
-          value={flexDirection}
-          onChange={(e) => setFlexDirection(e.target.value)}
-        >
-          <option value="row">row</option>
-          <option value="column">column</option>
-        </select>
-      </label>
-    </div>
-  );
-}
-
 export default function Home() {
-  // boolean options
-  const FlexDirOpts = [
-    { label: "row", value: "row" },
-    { label: "column", value: "column" },
-  ];
   // Content section state
   const [contentActive, setContentActive] = useState([]);
   const [padding, setPadding] = useState({
@@ -47,9 +25,8 @@ export default function Home() {
   // Name wrapper section state
   const [nameActive, setNameActive] = useState([]);
   const [msgActive, setMsgActive] = useState([]);
-  // background color
-  const [bgColor, setBgColor] = useState("#ffffff");
   // name config
+  const [nameBgColor, setNameBgColor] = useState("#a819fe");
   const [nameFontSize, setNameFontSize] = useState(16);
   const [namePadding, setNamePadding] = useState({
     top: 2,
@@ -57,8 +34,15 @@ export default function Home() {
     bottom: 2,
     left: 2,
   });
+  // name config
+  const [msgBgColor, setMsgBgColor] = useState("#a819fe");
   const [msgFontSize, setMsgFontSize] = useState(16);
-
+  const [msgPadding, setMsgPadding] = useState({
+    top: 2,
+    right: 2,
+    bottom: 2,
+    left: 2,
+  });
   // Compose CSS output for all active configs
   let cssOutput = "";
 
@@ -83,7 +67,7 @@ export default function Home() {
   if (
     nameActive.includes("nameFontSize") ||
     nameActive.includes("namePadding") ||
-    nameActive.includes("bgColor")
+    nameActive.includes("nameBgColor")
   ) {
     cssOutput += `yt-live-chat-message-renderer #author-name {\n`;
 
@@ -93,24 +77,43 @@ export default function Home() {
     if (nameActive.includes("namePadding")) {
       cssOutput += `  padding: ${padding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px;\n`;
     }
-    if (nameActive.includes("bgColor")) {
-      cssOutput += `  background-color: ${bgColor};\n`;
+    if (nameActive.includes("nameBgColor")) {
+      cssOutput += `  background-color: ${nameBgColor};\n`;
     }
     cssOutput += `}\n\n`;
   }
 
   //============= Viewer Message config =============
-  if (msgActive.includes("msgFontSize")) {
-    cssOutput += `yt-live-chat-message-renderer #message {\n  font-size: ${msgFontSize}px;\n}\n\n`;
+  if (
+    msgActive.includes("msgFontSize") ||
+    msgActive.includes("msgPadding") ||
+    msgActive.includes("msgBgColor")
+  ) {
+    cssOutput += `yt-live-chat-message-renderer #message {\n`;
+
+    if (msgActive.includes("msgFontSize")) {
+      cssOutput += `  font-size: ${msgFontSize}px;\n`;
+    }
+    if (msgActive.includes("msgPadding")) {
+      cssOutput += `  padding: ${padding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px;\n`;
+    }
+    if (msgActive.includes("msgBgColor")) {
+      cssOutput += `  background-color: ${msgBgColor};\n`;
+    }
+    cssOutput += `}\n\n`;
   }
 
   return (
     <div className="flex flex-col min-h-[100vh] max-h-[100vh] overflow-hidden">
-      <div className="py-4 px-6 bg-gray-800/40 w-full">hai</div>
-      <div className="grid grid-cols-[300px_minmax(500px,_1fr)_400px] gap-4 w-full">
+      {/* <div className="py-2 px-6 bg-[#383838] w-full flex flex-row justify-between">
+        <h1 className="text-base font-bold text-white">
+          Youtube Chat CSS Builder
+        </h1>
+      </div> */}
+      <div className="grid grid-cols-[230px_minmax(500px,_1fr)_300px] gap-4 w-full">
         <div
-          className="flex flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-gray-800"
-          id="element-tree"
+          className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
+          id="element-tree "
         >
           <ConfigSection
             title="Viewer Chat"
@@ -128,7 +131,7 @@ export default function Home() {
               {
                 title: "Name",
                 options: [
-                  { label: "Background Color", value: "bgColor" },
+                  { label: "Background Color", value: "nameBgColor" },
                   { label: "Font Size", value: "nameFontSize" },
                   { label: "Padding", value: "namePadding" },
                 ],
@@ -140,7 +143,11 @@ export default function Home() {
               },
               {
                 title: "Message",
-                options: [{ label: "Font Size", value: "msgFontSize" }],
+                options: [
+                  { label: "Background Color", value: "msgBgColor" },
+                  { label: "Font Size", value: "msgFontSize" },
+                  { label: "Padding", value: "msgPadding" },
+                ],
                 activeOptions: msgActive,
                 onAddOption: (opt) =>
                   setMsgActive((prev) =>
@@ -159,8 +166,8 @@ export default function Home() {
                 : undefined
             }
             authorNameStyle={{
-              backgroundColor: nameActive.includes("bgColor")
-                ? bgColor
+              backgroundColor: nameActive.includes("nameBgColor")
+                ? nameBgColor
                 : undefined,
               fontSize: nameActive.includes("nameFontSize")
                 ? `${nameFontSize}px`
@@ -170,31 +177,44 @@ export default function Home() {
                 : undefined,
             }}
             authorMsgStyle={{
+              backgroundColor: msgActive.includes("msgBgColor")
+                ? msgBgColor
+                : undefined,
               fontSize: msgActive.includes("msgFontSize")
                 ? `${msgFontSize}px`
+                : undefined,
+              padding: msgActive.includes("msgPadding")
+                ? `${msgPadding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px`
                 : undefined,
             }}
           />
         </div>
         <ConfigWrapper
+          // Content Config
           contentActive={contentActive}
           setContentActive={setContentActive}
           padding={padding}
           setPadding={setPadding}
-          namePadding={namePadding}
-          setNamePadding={setNamePadding}
           flexDirection={flexDirection}
           setFlexDirection={setFlexDirection}
+          //Viewer Name Config
           nameActive={nameActive}
           setNameActive={setNameActive}
-          msgActive={msgActive}
-          setMsgActive={setMsgActive}
-          bgColor={bgColor}
-          setBgColor={setBgColor}
+          nameBgColor={nameBgColor}
+          setNameBgColor={setNameBgColor}
           nameFontSize={nameFontSize}
           setNameFontSize={setNameFontSize}
+          namePadding={namePadding}
+          setNamePadding={setNamePadding}
+          // Viewer Message C0nfig
+          msgActive={msgActive}
+          setMsgActive={setMsgActive}
+          msgBgColor={msgBgColor}
+          setMsgBgColor={setMsgBgColor}
           msgFontSize={msgFontSize}
           setMsgFontSize={setMsgFontSize}
+          msgPadding={msgPadding}
+          setMsgPadding={setMsgPadding}
           cssOutput={cssOutput}
         />
       </div>

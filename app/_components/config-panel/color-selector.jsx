@@ -35,10 +35,17 @@ export default function ColorSelector({
   }, [onChange]);
 
   return (
-    <div className="w-full group flex flex-row justify-between py-5 border-b border-b-gray-800 items-center max-h-[50px] pl-3">
-      <div className="flex flex-row items-center justify-between w-full">
-        <p className="text-purple-400 font-bold">{label}</p>
-        <div className="flex flex-row items-center   ">
+    <div className="w-full group flex flex-row justify-between pl-2 py-10 border-b border-b-[#383838] items-center max-h-[50px]">
+      <div className="flex flex-col w-full">
+        <div className="flex flew-row justify-between">
+          <p className="text-purple-400 font-bold">{label}</p>
+          <X
+            className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
+            size={17}
+            onClick={onDelete}
+          />
+        </div>
+        <div className="flex flex-row-reverse  bg-[#383838] rounded-sm mt-2 py-1 px-2 w-fit">
           <input
             ref={inputRef}
             type="text"
@@ -47,14 +54,9 @@ export default function ColorSelector({
             defaultValue={inputValue}
             style={{ width: 90 }}
           />
-          <div className={`w-[20px] h-[20px] bg-[${inputValue}]`}></div>
+          <div></div>
         </div>
       </div>
-      <X
-        className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
-        size={17}
-        onClick={onDelete}
-      />
     </div>
   );
 }
