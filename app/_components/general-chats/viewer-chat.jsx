@@ -6,7 +6,6 @@ function ViewerChat({
   flexDirection,
   authorNameStyle,
   authorMsgStyle,
-  namePadding,
 }) {
   const previewStyle = {
     padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
@@ -16,6 +15,7 @@ function ViewerChat({
       flexDirection: flexDirection,
     }),
   };
+  console.log(authorNameStyle);
   return (
     <rz-chat-wrapper author-type="" className="items-center">
       <rz-author-photo id="author-photo">

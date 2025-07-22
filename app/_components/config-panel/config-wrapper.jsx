@@ -1,10 +1,13 @@
 "use client";
 import PaddingConfig from "./padding-config";
-import { BooleanConfig, FontSizeConfig } from "./style-config";
+// import { BooleanConfig, FontSizeConfig } from "./style-config";
 import ColorSelector from "./color-selector";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import CssOutput from "./css-output";
+import { BooleanSelector } from "./boolean-selector";
+import { FontSizeConfig } from "./font-size-config";
+import FontEditor from "./font-config";
 
 export default function ConfigWrapper({
   // viewer chat wrapper
@@ -16,9 +19,17 @@ export default function ConfigWrapper({
   setFlexDirection,
   // viewer Name config
   nameActive,
+  setNameActive,
+  nameFontFamily,
+  setNameFontFamily,
+  nameFontWeight,
+  setNameFontWeight,
+  nameLineHeight,
+  setNameLineHeight,
+  nameTextAlign,
+  setNameTextAlign,
   nameBgColor,
   setNameBgColor,
-  setNameActive,
   namePadding,
   setNamePadding,
   nameFontSize,
@@ -26,6 +37,14 @@ export default function ConfigWrapper({
   // viewer Message config
   msgActive,
   setMsgActive,
+  msgFontFamily,
+  setMsgFontFamily,
+  msgFontWeight,
+  setMsgFontWeight,
+  msgLineHeight,
+  setMsgLineHeight,
+  msgTextAlign,
+  setMsgTextAlign,
   msgBgColor,
   setMsgBgColor,
   msgPadding,
@@ -74,12 +93,20 @@ export default function ConfigWrapper({
           //Viewer Name Config
           nameActive={nameActive}
           setNameActive={setNameActive}
+          nameFontFamily={nameFontFamily}
+          setNameFontFamily={setNameFontFamily}
+          nameFontWeight={nameFontWeight}
+          setNameFontWeight={setNameFontWeight}
+          nameLineHeight={nameLineHeight}
+          setNameLineHeight={setNameLineHeight}
+          nameTextAlign={nameTextAlign}
+          setNameTextAlign={setNameTextAlign}
           nameBgColor={nameBgColor}
           setNameBgColor={setNameBgColor}
-          namePadding={namePadding}
-          setNamePadding={setNamePadding}
           nameFontSize={nameFontSize}
           setNameFontSize={setNameFontSize}
+          namePadding={namePadding}
+          setNamePadding={setNamePadding}
           // Viewer Message C0nfig
           msgActive={msgActive}
           setMsgActive={setMsgActive}
@@ -89,6 +116,15 @@ export default function ConfigWrapper({
           setMsgFontSize={setMsgFontSize}
           msgPadding={msgPadding}
           setMsgPadding={setMsgPadding}
+          cssOutput={cssOutput}
+          msgFontFamily={msgFontFamily}
+          setMsgFontFamily={setMsgFontFamily}
+          msgFontWeight={msgFontWeight}
+          setMsgFontWeight={setMsgFontWeight}
+          msgLineHeight={msgLineHeight}
+          setMsgLineHeight={setMsgLineHeight}
+          msgTextAlign={msgTextAlign}
+          setMsgTextAlign={setMsgTextAlign}
         />
       ) : (
         <CssOutput cssOutput={cssOutput} />
@@ -107,9 +143,17 @@ function ChatConfigPanel({
   setFlexDirection,
   // viewer Name config
   nameActive,
+  setNameActive,
+  nameFontFamily,
+  setNameFontFamily,
+  nameFontWeight,
+  setNameFontWeight,
+  nameLineHeight,
+  setNameLineHeight,
+  nameTextAlign,
+  setNameTextAlign,
   nameBgColor,
   setNameBgColor,
-  setNameActive,
   namePadding,
   setNamePadding,
   nameFontSize,
@@ -117,6 +161,14 @@ function ChatConfigPanel({
   // viewer Message config
   msgActive,
   setMsgActive,
+  msgFontFamily,
+  setMsgFontFamily,
+  msgFontWeight,
+  setMsgFontWeight,
+  msgLineHeight,
+  setMsgLineHeight,
+  msgTextAlign,
+  setMsgTextAlign,
   msgBgColor,
   setMsgBgColor,
   msgPadding,
@@ -165,7 +217,7 @@ function ChatConfigPanel({
           />
         )}
         {contentActive.includes("flexDirection") && (
-          <BooleanConfig
+          <BooleanSelector
             label="Content Flex Direction"
             opts={FlexDirOpts}
             value={flexDirection}
@@ -179,7 +231,6 @@ function ChatConfigPanel({
           />
         )}
         {/* Name Wrapper Configs */}
-
         {nameActive.includes("nameBgColor") && (
           <ColorSelector
             label="Name Background Color"
@@ -193,23 +244,29 @@ function ChatConfigPanel({
             }}
           />
         )}
-        {nameActive.includes("nameFontSize") && (
-          <FontSizeConfig
-            label="Name Font Size"
-            inputValue={nameFontSize}
-            onChange={(e) => {
-              const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
-              e.target.value = cleaned;
-              setNameFontSize(Number(e.target.value));
-            }}
+        {nameActive.includes("nameFontFamily") && (
+          <FontEditor
+            label="Name Font"
+            fontFamily={nameFontFamily}
+            setFontFamily={setNameFontFamily}
+            fontWeight={nameFontWeight}
+            setFontWeight={setNameFontWeight}
+            lineHeight={nameLineHeight}
+            setLineHeight={setNameLineHeight}
+            textAlign={nameTextAlign}
+            setTextAlign={setNameTextAlign}
             onDelete={() => {
-              setNameFontSize(16);
+              setNameFontFamily("Inter");
+              setNameFontWeight("400");
+              setNameLineHeight("normal");
+              setNameTextAlign("left");
               setNameActive((prev) =>
-                prev.filter((opt) => opt !== "nameFontSize")
+                prev.filter((o) => o !== "nameFontFamily")
               );
             }}
           />
         )}
+        // Do the same for msgActive with msg* props
         {nameActive.includes("namePadding") && (
           <PaddingConfig
             label="Name Padding"

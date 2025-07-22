@@ -1,14 +1,7 @@
 "use client";
 import { useState } from "react";
 import ViewerChat from "./_components/general-chats/viewer-chat";
-import PaddingConfig from "./_components/config-panel/padding-config";
 import ConfigSection from "./_components/element-tree/element-tree";
-import CodeBlock from "./_components/code-bock";
-import {
-  BooleanConfig,
-  FontSizeConfig,
-} from "./_components/config-panel/style-config";
-import ColorSelector from "./_components/config-panel/color-selector";
 import ConfigWrapper from "./_components/config-panel/config-wrapper";
 
 export default function Home() {
@@ -23,9 +16,14 @@ export default function Home() {
   const [flexDirection, setFlexDirection] = useState("row");
 
   // Name wrapper section state
+
   const [nameActive, setNameActive] = useState([]);
   const [msgActive, setMsgActive] = useState([]);
   // name config
+  const [nameFontFamily, setNameFontFamily] = useState("Inter");
+  const [nameFontWeight, setNameFontWeight] = useState("400");
+  const [nameLineHeight, setNameLineHeight] = useState("normal");
+  const [nameTextAlign, setNameTextAlign] = useState("left");
   const [nameBgColor, setNameBgColor] = useState("#a819fe");
   const [nameFontSize, setNameFontSize] = useState(16);
   const [namePadding, setNamePadding] = useState({
@@ -34,7 +32,12 @@ export default function Home() {
     bottom: 2,
     left: 2,
   });
+
   // name config
+  const [msgFontFamily, setMsgFontFamily] = useState("Inter");
+  const [msgFontWeight, setMsgFontWeight] = useState("400");
+  const [msgLineHeight, setMsgLineHeight] = useState("normal");
+  const [msgTextAlign, setMsgTextAlign] = useState("left");
   const [msgBgColor, setMsgBgColor] = useState("#a819fe");
   const [msgFontSize, setMsgFontSize] = useState(16);
   const [msgPadding, setMsgPadding] = useState({
@@ -74,6 +77,19 @@ export default function Home() {
     if (nameActive.includes("nameFontSize")) {
       cssOutput += `  font-size: ${nameFontSize}px;\n`;
     }
+    if (nameActive.includes("nameFontWeight")) {
+      cssOutput += `  font-weight: ${nameFontWeight};\n`;
+    }
+    if (nameActive.includes("nameFontFamily")) {
+      cssOutput += `  font-family: '${nameFontFamily}', sans-serif;\n`;
+    }
+    if (nameActive.includes("nameLineHeight")) {
+      cssOutput += `  line-height: ${nameLineHeight};\n`;
+    }
+    if (nameActive.includes("nameTextAlign")) {
+      cssOutput += `  text-align: ${nameTextAlign};\n`;
+    }
+
     if (nameActive.includes("namePadding")) {
       cssOutput += `  padding: ${padding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px;\n`;
     }
@@ -93,6 +109,18 @@ export default function Home() {
 
     if (msgActive.includes("msgFontSize")) {
       cssOutput += `  font-size: ${msgFontSize}px;\n`;
+    }
+    if (msgActive.includes("msgFontWeight")) {
+      cssOutput += `  font-weight: ${msgFontWeight};\n`;
+    }
+    if (msgActive.includes("msgFontFamily")) {
+      cssOutput += `  font-family: '${msgFontFamily}', sans-serif;\n`;
+    }
+    if (msgActive.includes("msgLineHeight")) {
+      cssOutput += `  line-height: ${msgLineHeight};\n`;
+    }
+    if (msgActive.includes("msgTextAlign")) {
+      cssOutput += `  text-align: ${msgTextAlign};\n`;
     }
     if (msgActive.includes("msgPadding")) {
       cssOutput += `  padding: ${padding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px;\n`;
@@ -132,7 +160,7 @@ export default function Home() {
                 title: "Name",
                 options: [
                   { label: "Background Color", value: "nameBgColor" },
-                  { label: "Font Size", value: "nameFontSize" },
+                  { label: "Font Family", value: "nameFontFamily" },
                   { label: "Padding", value: "namePadding" },
                 ],
                 activeOptions: nameActive,
@@ -145,7 +173,7 @@ export default function Home() {
                 title: "Message",
                 options: [
                   { label: "Background Color", value: "msgBgColor" },
-                  { label: "Font Size", value: "msgFontSize" },
+                  { label: "Font Family", value: "msgFontFamily" },
                   { label: "Padding", value: "msgPadding" },
                 ],
                 activeOptions: msgActive,
@@ -172,6 +200,18 @@ export default function Home() {
               fontSize: nameActive.includes("nameFontSize")
                 ? `${nameFontSize}px`
                 : undefined,
+              fontWeight: nameActive.includes("nameFontWeight")
+                ? nameFontWeight
+                : undefined,
+              fontFamily: nameActive.includes("nameFontFamily")
+                ? `'${nameFontFamily}', sans-serif`
+                : undefined,
+              lineHeight: nameActive.includes("nameLineHeight")
+                ? nameLineHeight
+                : undefined,
+              textAlign: nameActive.includes("nameTextAlign")
+                ? nameTextAlign
+                : undefined,
               padding: nameActive.includes("namePadding")
                 ? `${namePadding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px`
                 : undefined,
@@ -182,6 +222,18 @@ export default function Home() {
                 : undefined,
               fontSize: msgActive.includes("msgFontSize")
                 ? `${msgFontSize}px`
+                : undefined,
+              fontWeight: msgActive.includes("msgFontWeight")
+                ? msgFontWeight
+                : undefined,
+              fontFamily: msgActive.includes("msgFontFamily")
+                ? `'${msgFontFamily}', sans-serif`
+                : undefined,
+              lineHeight: msgActive.includes("msgLineHeight")
+                ? msgLineHeight
+                : undefined,
+              textAlign: msgActive.includes("msgTextAlign")
+                ? msgTextAlign
                 : undefined,
               padding: msgActive.includes("msgPadding")
                 ? `${msgPadding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px`
@@ -200,6 +252,14 @@ export default function Home() {
           //Viewer Name Config
           nameActive={nameActive}
           setNameActive={setNameActive}
+          nameFontFamily={nameFontFamily}
+          setNameFontFamily={setNameFontFamily}
+          nameFontWeight={nameFontWeight}
+          setNameFontWeight={setNameFontWeight}
+          nameLineHeight={nameLineHeight}
+          setNameLineHeight={setNameLineHeight}
+          nameTextAlign={nameTextAlign}
+          setNameTextAlign={setNameTextAlign}
           nameBgColor={nameBgColor}
           setNameBgColor={setNameBgColor}
           nameFontSize={nameFontSize}
@@ -216,6 +276,14 @@ export default function Home() {
           msgPadding={msgPadding}
           setMsgPadding={setMsgPadding}
           cssOutput={cssOutput}
+          msgFontFamily={msgFontFamily}
+          setMsgFontFamily={setMsgFontFamily}
+          msgFontWeight={msgFontWeight}
+          setMsgFontWeight={setMsgFontWeight}
+          msgLineHeight={msgLineHeight}
+          setMsgLineHeight={setMsgLineHeight}
+          msgTextAlign={msgTextAlign}
+          setMsgTextAlign={setMsgTextAlign}
         />
       </div>
     </div>
