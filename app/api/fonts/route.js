@@ -1,6 +1,7 @@
 let cachedFonts = null;
 let lastFetched = 0;
 const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+// const CACHE_DURATION = 1000 * 60 * 5; // 24 hours
 
 export async function GET() {
   const now = Date.now();

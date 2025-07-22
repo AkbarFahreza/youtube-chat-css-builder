@@ -1,4 +1,7 @@
-import React from "react";
+// ./_components/general-chats/viewer-chat.jsx
+"use client";
+
+import React, { useEffect } from "react";
 import Image from "next/image";
 
 function ViewerChat({
@@ -7,15 +10,55 @@ function ViewerChat({
   authorNameStyle,
   authorMsgStyle,
 }) {
+  const makeGoogleFontLink = (style, id) => {
+    if (!style?.fontFamily) return null;
+    const family = style.fontFamily.replace(/['"]/g, "").split(",")[0].trim();
+    const weight = style.fontWeight || "400";
+    const familyParam = family.replace(/\s+/g, "+");
+    return {
+      href: `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${weight}&display=swap`,
+      id: `google-font-${id}-${familyParam}-${weight}`,
+    };
+  };
+
+  // Build link info for name & message
+  const nameFont = makeGoogleFontLink(authorNameStyle, "name");
+  const msgFont = makeGoogleFontLink(authorMsgStyle, "msg");
+
+  // Inject/remove <link> tags on-the-fly
+  useEffect(() => {
+    [nameFont, msgFont].forEach((font) => {
+      if (!font) return;
+      // avoid duplicating
+      if (!document.getElementById(font.id)) {
+        const link = document.createElement("link");
+        link.id = font.id;
+        link.rel = "stylesheet";
+        link.href = font.href;
+        document.head.appendChild(link);
+      }
+    });
+
+    // (Optional) clean up if component unmounts
+    return () => {
+      [nameFont, msgFont].forEach((font) => {
+        if (font) {
+          const existing = document.getElementById(font.id);
+          if (existing) existing.remove();
+        }
+      });
+    };
+  }, [nameFont?.href, msgFont?.href]); // re-run when hrefs change
+
   const previewStyle = {
     padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
     transition: "padding 0.2s",
     ...(flexDirection && {
       display: "flex",
-      flexDirection: flexDirection,
+      flexDirection,
     }),
   };
-  console.log(authorNameStyle);
+
   return (
     <rz-chat-wrapper author-type="" className="items-center">
       <rz-author-photo id="author-photo">

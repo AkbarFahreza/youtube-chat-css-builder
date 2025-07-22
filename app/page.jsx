@@ -197,21 +197,11 @@ export default function Home() {
               backgroundColor: nameActive.includes("nameBgColor")
                 ? nameBgColor
                 : undefined,
-              fontSize: nameActive.includes("nameFontSize")
-                ? `${nameFontSize}px`
-                : undefined,
-              fontWeight: nameActive.includes("nameFontWeight")
-                ? nameFontWeight
-                : undefined,
-              fontFamily: nameActive.includes("nameFontFamily")
-                ? `'${nameFontFamily}', sans-serif`
-                : undefined,
-              lineHeight: nameActive.includes("nameLineHeight")
-                ? nameLineHeight
-                : undefined,
-              textAlign: nameActive.includes("nameTextAlign")
-                ? nameTextAlign
-                : undefined,
+              fontSize: nameFontSize,
+              fontWeight: nameFontWeight,
+              fontFamily: `'${nameFontFamily}'`,
+              lineHeight: nameLineHeight,
+              textAlign: nameTextAlign,
               padding: nameActive.includes("namePadding")
                 ? `${namePadding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px`
                 : undefined,
@@ -227,7 +217,7 @@ export default function Home() {
                 ? msgFontWeight
                 : undefined,
               fontFamily: msgActive.includes("msgFontFamily")
-                ? `'${msgFontFamily}', sans-serif`
+                ? `'${msgFontFamily}', sans-serif !important`
                 : undefined,
               lineHeight: msgActive.includes("msgLineHeight")
                 ? msgLineHeight

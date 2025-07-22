@@ -31,6 +31,15 @@ export default function FontEditor({
   }, [fonts, searchQuery]);
 
   useEffect(() => {
+    console.log("Trigger onChange from FontEditor", {
+      cssImport,
+      fontFamilyCss,
+      fontFamily,
+      weight,
+      fontSize,
+      align,
+      lineHeight,
+    });
     if (!isLoaded) {
       fetch("/api/fonts")
         .then((res) => res.json())
@@ -42,32 +51,42 @@ export default function FontEditor({
         });
     }
   }, [isLoaded, setFonts]);
-
   useEffect(() => {
     if (!selectedFont) return;
-
-    const weights = selectedFont.variants.filter((v) => !v.includes("italic"));
-    const id = `google-font-${selectedFont.family}`;
-
+    const allWeights = selectedFont.variants.filter(
+      (v) => !v.includes("italic")
+    );
+    const numericWeights = allWeights.filter((v) => v !== "regular");
+    const weightParam = numericWeights.length
+      ? `:wght@${numericWeights.join(";")}`
+      : "";
+    const familyParam = selectedFont.family.replace(/ /g, "+");
+    const id = `google-font-${familyParam}-${
+      numericWeights.join("-") || "base"
+    }`;
     if (document.getElementById(id)) return;
 
     const link = document.createElement("link");
     link.id = id;
     link.rel = "stylesheet";
-    link.href = `https://fonts.googleapis.com/css2?family=${selectedFont.family.replace(
-      / /g,
-      "+"
-    )}:wght@${weights.join(";")}&display=swap`;
+    link.href = `https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap`;
     document.head.appendChild(link);
   }, [selectedFont]);
 
+  // ----------
+
   const cssImport = selectedFont
-    ? `@import url('https://fonts.googleapis.com/css2?family=${selectedFont.family.replace(
-        / /g,
-        "+"
-      )}:wght@${selectedFont.variants
-        .filter((v) => !v.includes("italic") && v !== "regular")
-        .join(";")}&display=swap');`
+    ? (() => {
+        const allWeights = selectedFont.variants.filter(
+          (v) => !v.includes("italic")
+        );
+        const numericWeights = allWeights.filter((v) => v !== "regular");
+        const weightParam = numericWeights.length
+          ? `:wght@${numericWeights.join(";")}`
+          : "";
+        const familyParam = selectedFont.family.replace(/ /g, "+");
+        return `@import url('https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap');`;
+      })()
     : "";
 
   const fontFamilyCss = selectedFont
@@ -112,6 +131,7 @@ export default function FontEditor({
       {/* Font Family */}
       {/* Font Search & Selector */}
       <FontSelector
+        selectedFont={selectedFont}
         fonts={fonts}
         fontFamily={fontFamily}
         setFontFamily={setFontFamily}

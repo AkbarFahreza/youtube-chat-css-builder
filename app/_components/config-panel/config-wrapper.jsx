@@ -182,7 +182,7 @@ function ChatConfigPanel({
   ];
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="max-h-[90vh] pr-3 overflow-y-scroll scrollbar">
+    <div className="max-h-[90vh] min-h-[90vh] pr-3 overflow-y-scroll scrollbar">
       <div
         className="py-3  border-b-secondary
         border-b rounded-md flex flex-row justify-between items-center"
@@ -247,26 +247,33 @@ function ChatConfigPanel({
         {nameActive.includes("nameFontFamily") && (
           <FontEditor
             label="Name Font"
-            fontFamily={nameFontFamily}
-            setFontFamily={setNameFontFamily}
-            fontWeight={nameFontWeight}
-            setFontWeight={setNameFontWeight}
-            lineHeight={nameLineHeight}
-            setLineHeight={setNameLineHeight}
-            textAlign={nameTextAlign}
-            setTextAlign={setNameTextAlign}
+            value={{
+              fontFamily: nameFontFamily,
+              fontWeight: nameFontWeight,
+              lineHeight: nameLineHeight,
+              textAlign: nameTextAlign,
+              fontSize: nameFontSize,
+            }}
+            onChange={(val) => {
+              console.log("FontEditor onChange", val);
+              setNameFontFamily(val.fontFamily);
+              setNameFontWeight(val.fontWeight);
+              setNameLineHeight(val.lineHeight);
+              setNameTextAlign(val.textAlign);
+              setNameFontSize(val.fontSize);
+            }}
             onDelete={() => {
               setNameFontFamily("Inter");
               setNameFontWeight("400");
               setNameLineHeight("normal");
               setNameTextAlign("left");
+              setNameFontSize(16);
               setNameActive((prev) =>
                 prev.filter((o) => o !== "nameFontFamily")
               );
             }}
           />
         )}
-        // Do the same for msgActive with msg* props
         {nameActive.includes("namePadding") && (
           <PaddingConfig
             label="Name Padding"
