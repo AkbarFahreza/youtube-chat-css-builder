@@ -54,7 +54,6 @@ export default function ColorSelector({
             defaultValue={inputValue}
             style={{ width: 90 }}
           />
-          <div></div>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ function ViewerChat({
   // Build link info for name & message
   const nameFont = makeGoogleFontLink(authorNameStyle, "name");
   const msgFont = makeGoogleFontLink(authorMsgStyle, "msg");
-
+  console.log(authorMsgStyle);
   // Inject/remove <link> tags on-the-fly
   useEffect(() => {
     [nameFont, msgFont].forEach((font) => {
@@ -58,7 +58,7 @@ function ViewerChat({
       flexDirection,
     }),
   };
-  console.log(authorNameStyle);
+  // console.log(authorNameStyle);
   return (
     <rz-chat-wrapper author-type="" className="items-center">
       <rz-author-photo id="author-photo">

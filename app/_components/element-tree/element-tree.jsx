@@ -34,7 +34,7 @@ export default function ConfigSection({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showMenu]);
-
+  // console.log(activeOptions);
   return (
     <div>
       {/* Section Title */}

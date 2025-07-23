@@ -16,7 +16,7 @@ export default function FontEditor({
 }) {
   const { fonts, isLoaded, setFonts } = useGoogleFonts();
   const inputRef = useRef(null);
-
+  const prev = useRef({});
   // States
   const [fontFamily, setFontFamily] = useState(value?.fontFamily || "Inter");
   const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
@@ -79,9 +79,8 @@ export default function FontEditor({
     }
   }, [selectedFont]);
 
-  // Sync with parent
   useEffect(() => {
-    onChange?.({
+    const current = {
       cssImport,
       fontFamilyCss,
       fontFamily,
@@ -90,7 +89,16 @@ export default function FontEditor({
       fontSize,
       textAlign,
       lineHeight,
-    });
+    };
+
+    const changed = Object.entries(current).some(
+      ([key, val]) => prev.current[key] !== val
+    );
+
+    if (changed) {
+      prev.current = current;
+      onChange?.(current);
+    }
   }, [
     cssImport,
     fontFamilyCss,
@@ -134,7 +142,7 @@ export default function FontEditor({
     <div className="pt-3 pb-4 border-b border-b-[#383838] flex flex-col gap-3 group w-full h-full">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <p className="font-bold text-purple-500 text-base">{label}</p>
+        <p className="font-bold text-purple-500">{label}</p>
         <X
           className="cursor-pointer text-red-500 opacity-0 group-hover:opacity-100 transition"
           size={17}
