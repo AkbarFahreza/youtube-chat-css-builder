@@ -139,7 +139,7 @@ export default function FontEditor({
   }, [onChange]);
 
   return (
-    <div className="pt-3 pb-4 border-b border-b-[#383838] flex flex-col gap-3 group w-full h-full">
+    <div className="pt-3 pb-4 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
       {/* Header */}
       <div className="flex justify-between items-center">
         <p className="font-bold text-purple-500">{label}</p>

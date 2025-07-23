@@ -183,7 +183,7 @@ function ChatConfigPanel({
           <PaddingConfig
             label="Name Padding"
             padding={nameConfig.padding}
-            setPadding={(p) => updateNameConfig("padding", p)}
+            setPadding={(updated) => updateNameConfig("padding", updated)}
             onDelete={() => {
               updateNameConfig("padding", {
                 top: 2,

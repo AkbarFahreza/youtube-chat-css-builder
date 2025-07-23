@@ -35,7 +35,7 @@ export default function ColorSelector({
   }, [onChange]);
 
   return (
-    <div className="w-full group flex flex-row justify-between  py-10 border-b border-b-[#383838] items-center max-h-[50px]">
+    <div className="w-full group flex flex-row justify-between  py-10 border-b border-b-white/20 items-center max-h-[50px]">
       <div className="flex flex-col w-full">
         <div className="flex flew-row justify-between">
           <p className="text-purple-500 font-bold">{label}</p>
@@ -45,7 +45,7 @@ export default function ColorSelector({
             onClick={onDelete}
           />
         </div>
-        <div className="flex flex-row-reverse  bg-[#383838] rounded-sm mt-2 py-1 px-2 w-fit">
+        <div className="flex flex-row-reverse  bg-secondary rounded-sm mt-2 py-1 px-2 w-fit">
           <input
             ref={inputRef}
             type="text"

@@ -21,11 +21,8 @@ function ViewerChat({
     };
   };
 
-  // Build link info for name & message
   const nameFont = makeGoogleFontLink(authorNameStyle, "name");
   const msgFont = makeGoogleFontLink(authorMsgStyle, "msg");
-  console.log(authorMsgStyle);
-  // Inject/remove <link> tags on-the-fly
   useEffect(() => {
     [nameFont, msgFont].forEach((font) => {
       if (!font) return;
