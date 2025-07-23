@@ -6,7 +6,6 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import CssOutput from "./css-output";
 import { BooleanSelector } from "./boolean-selector";
-import { FontSizeConfig } from "./font-size-config";
 import FontEditor from "./font-config";
 
 export default function ConfigWrapper({
@@ -22,6 +21,8 @@ export default function ConfigWrapper({
   setNameActive,
   nameFontFamily,
   setNameFontFamily,
+  nameFontColor,
+  setNameFontColor,
   nameFontWeight,
   setNameFontWeight,
   nameLineHeight,
@@ -95,6 +96,8 @@ export default function ConfigWrapper({
           setNameActive={setNameActive}
           nameFontFamily={nameFontFamily}
           setNameFontFamily={setNameFontFamily}
+          nameFontColor={nameFontColor}
+          setNameFontColor={setNameFontColor}
           nameFontWeight={nameFontWeight}
           setNameFontWeight={setNameFontWeight}
           nameLineHeight={nameLineHeight}
@@ -146,6 +149,8 @@ function ChatConfigPanel({
   setNameActive,
   nameFontFamily,
   setNameFontFamily,
+  nameFontColor,
+  setNameFontColor,
   nameFontWeight,
   setNameFontWeight,
   nameLineHeight,
@@ -249,6 +254,7 @@ function ChatConfigPanel({
             label="Name Font"
             value={{
               fontFamily: nameFontFamily,
+              fontColor: nameFontColor,
               fontWeight: nameFontWeight,
               lineHeight: nameLineHeight,
               textAlign: nameTextAlign,
@@ -257,6 +263,7 @@ function ChatConfigPanel({
             onChange={(val) => {
               console.log("FontEditor onChange", val);
               setNameFontFamily(val.fontFamily);
+              setNameFontColor(val.fontColor);
               setNameFontWeight(val.fontWeight);
               setNameLineHeight(val.lineHeight);
               setNameTextAlign(val.textAlign);
@@ -264,10 +271,11 @@ function ChatConfigPanel({
             }}
             onDelete={() => {
               setNameFontFamily("Inter");
+              setNameFontColor("#ffffff");
               setNameFontWeight("400");
               setNameLineHeight("normal");
               setNameTextAlign("left");
-              setNameFontSize(16);
+              setNameFontSize(15);
               setNameActive((prev) =>
                 prev.filter((o) => o !== "nameFontFamily")
               );
@@ -306,19 +314,32 @@ function ChatConfigPanel({
             }}
           />
         )}
-        {msgActive.includes("msgFontSize") && (
-          <FontSizeConfig
-            label="Message Font Size"
-            inputValue={msgFontSize}
-            onChange={(e) => {
-              const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
-              e.target.value = cleaned;
-              setMsgFontSize(Number(e.target.value));
+        {msgActive.includes("msgFontFamily") && (
+          <FontEditor
+            label="Message Font"
+            value={{
+              fontFamily: msgFontFamily,
+              fontWeight: msgFontWeight,
+              lineHeight: msgLineHeight,
+              textAlign: msgTextAlign,
+              fontSize: msgFontSize,
+            }}
+            onChange={(val) => {
+              // console.log("FontEditor onChange", val);
+              setMsgFontFamily(val.fontFamily);
+              setMsgFontWeight(val.fontWeight);
+              setMsgLineHeight(val.lineHeight);
+              setMsgTextAlign(val.textAlign);
+              setMsgFontSize(val.fontSize);
             }}
             onDelete={() => {
-              setMsgFontSize(16);
+              setMsgFontFamily("Inter");
+              setMsgFontWeight("400");
+              setMsgLineHeight("normal");
+              setMsgTextAlign("left");
+              setMsgFontSize(15);
               setMsgActive((prev) =>
-                prev.filter((opt) => opt !== "msgFontSize")
+                prev.filter((o) => o !== "nameFontFamily")
               );
             }}
           />

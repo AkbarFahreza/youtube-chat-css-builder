@@ -20,8 +20,9 @@
     --foreground: #ededed;
   }
 }
-.rz-input {
-  @apply [appearance:textfield] -translate-x-3 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-secondary py-[2px] px-2 rounded-md outline-0;
+
+input {
+  @apply outline-0;
 }
 
 body {

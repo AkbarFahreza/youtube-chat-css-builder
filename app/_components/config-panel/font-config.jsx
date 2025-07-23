@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import { AlignLeft, AlignCenter, AlignRight, Trash2 } from "lucide-react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { AlignLeft, AlignCenter, AlignRight, X } from "lucide-react";
 import { useGoogleFonts } from "@/app/stores/useGlobalFonts";
 import FontSelector from "./font-selector";
+import "@melloware/coloris/dist/coloris.css";
+
+let Coloris;
+
 export default function FontEditor({
   label = "Font",
   value,
@@ -11,35 +15,39 @@ export default function FontEditor({
   onDelete,
 }) {
   const { fonts, isLoaded, setFonts } = useGoogleFonts();
+  const inputRef = useRef(null);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // States
   const [fontFamily, setFontFamily] = useState(value?.fontFamily || "Inter");
-  const [weight, setWeight] = useState(value?.fontWeight || "400");
+  const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
+  const [fontWeight, setFontWeight] = useState(value?.fontWeight || "400");
   const [fontSize, setFontSize] = useState(value?.fontSize || 16);
   const [lineHeight, setLineHeight] = useState(value?.lineHeight || "normal");
-  const [align, setAlign] = useState(value?.textAlign || "left");
+  const [textAlign, setTextAlign] = useState(value?.textAlign || "left");
 
+  // Font Info
   const selectedFont = useMemo(
     () => fonts.find((f) => f.family === fontFamily),
-    [fontFamily, fonts]
+    [fonts, fontFamily]
   );
 
-  const filteredFonts = useMemo(() => {
-    return fonts.filter((font) =>
-      font.family.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [fonts, searchQuery]);
+  const fontFamilyCss = selectedFont
+    ? `font-family: '${selectedFont.family}', ${selectedFont.category};`
+    : "";
 
+  const cssImport = selectedFont
+    ? (() => {
+        const weights = selectedFont.variants.filter(
+          (v) => !v.includes("italic") && v !== "regular"
+        );
+        const weightParam = weights.length ? `:wght@${weights.join(";")}` : "";
+        const familyParam = selectedFont.family.replace(/ /g, "+");
+        return `@import url('https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap');`;
+      })()
+    : "";
+
+  // Load fonts once
   useEffect(() => {
-    console.log("Trigger onChange from FontEditor", {
-      cssImport,
-      fontFamilyCss,
-      fontFamily,
-      weight,
-      fontSize,
-      align,
-      lineHeight,
-    });
     if (!isLoaded) {
       fetch("/api/fonts")
         .then((res) => res.json())
@@ -50,99 +58,114 @@ export default function FontEditor({
           }
         });
     }
-  }, [isLoaded, setFonts]);
+  }, [isLoaded, setFonts, fontFamily]);
+
+  // Load selected font
   useEffect(() => {
     if (!selectedFont) return;
-    const allWeights = selectedFont.variants.filter(
-      (v) => !v.includes("italic")
+    const weights = selectedFont.variants.filter(
+      (v) => !v.includes("italic") && v !== "regular"
     );
-    const numericWeights = allWeights.filter((v) => v !== "regular");
-    const weightParam = numericWeights.length
-      ? `:wght@${numericWeights.join(";")}`
-      : "";
+    const weightParam = weights.length ? `:wght@${weights.join(";")}` : "";
     const familyParam = selectedFont.family.replace(/ /g, "+");
-    const id = `google-font-${familyParam}-${
-      numericWeights.join("-") || "base"
-    }`;
-    if (document.getElementById(id)) return;
+    const id = `google-font-${familyParam}-${weights.join("-") || "base"}`;
 
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = `https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap`;
-    document.head.appendChild(link);
+    if (!document.getElementById(id)) {
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = `https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap`;
+      document.head.appendChild(link);
+    }
   }, [selectedFont]);
 
-  // ----------
-
-  const cssImport = selectedFont
-    ? (() => {
-        const allWeights = selectedFont.variants.filter(
-          (v) => !v.includes("italic")
-        );
-        const numericWeights = allWeights.filter((v) => v !== "regular");
-        const weightParam = numericWeights.length
-          ? `:wght@${numericWeights.join(";")}`
-          : "";
-        const familyParam = selectedFont.family.replace(/ /g, "+");
-        return `@import url('https://fonts.googleapis.com/css2?family=${familyParam}${weightParam}&display=swap');`;
-      })()
-    : "";
-
-  const fontFamilyCss = selectedFont
-    ? `font-family: '${selectedFont.family}', ${selectedFont.category};`
-    : "";
-
+  // Sync with parent
   useEffect(() => {
     onChange?.({
       cssImport,
       fontFamilyCss,
       fontFamily,
-      fontWeight: weight,
+      fontColor,
+      fontWeight,
       fontSize,
-      textAlign: align,
+      textAlign,
       lineHeight,
     });
   }, [
     cssImport,
     fontFamilyCss,
     fontFamily,
-    weight,
+    fontColor,
+    fontWeight,
     fontSize,
-    align,
+    textAlign,
     lineHeight,
+    onChange,
   ]);
 
+  // Setup Coloris
+  useEffect(() => {
+    import("@melloware/coloris").then((mod) => {
+      Coloris = mod.default;
+      Coloris.init();
+
+      const el = inputRef.current;
+      const handleInput = (e) => {
+        const val = e.target.value;
+        setFontColor(val);
+        onChange?.({
+          cssImport,
+          fontFamilyCss,
+          fontFamily,
+          fontColor: val,
+          fontWeight,
+          fontSize,
+          textAlign,
+          lineHeight,
+        });
+      };
+
+      el?.addEventListener("input", handleInput);
+      return () => el?.removeEventListener("input", handleInput);
+    });
+  }, [onChange]);
+
   return (
-    <div className="bg-zinc-900 p-4 text-white rounded space-y-4">
-      <div className="flex items-center justify-between">
-        <label className="block font-semibold">{label}</label>
-        {onDelete && (
-          <button
-            className="text-red-400 hover:text-red-600 transition"
-            onClick={onDelete}
-            title="Remove font config"
-          >
-            <Trash2 size={16} />
-          </button>
-        )}
+    <div className="pt-3 pb-4 border-b border-b-[#383838] flex flex-col gap-3 group w-full h-full">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <p className="font-bold text-purple-500 text-base">{label}</p>
+        <X
+          className="cursor-pointer text-red-500 opacity-0 group-hover:opacity-100 transition"
+          size={17}
+          onClick={onDelete}
+        />
       </div>
 
-      {/* Font Family */}
-      {/* Font Search & Selector */}
-      <FontSelector
-        selectedFont={selectedFont}
-        fonts={fonts}
-        fontFamily={fontFamily}
-        setFontFamily={setFontFamily}
-      />
+      {/* Font Selector + Color */}
+      <div className="flex gap-2 items-center">
+        <FontSelector
+          selectedFont={selectedFont}
+          fonts={fonts}
+          fontFamily={fontFamily}
+          setFontFamily={setFontFamily}
+        />
+        <input
+          ref={inputRef}
+          type="text"
+          data-coloris
+          className="coloris bg-secondary py-1 px-2 rounded w-[90px]"
+          value={fontColor}
+          onChange={(e) => setFontColor(e.target.value)}
+        />
+      </div>
 
       {/* Weight & Size */}
       <div className="flex gap-2">
         <select
-          className="bg-zinc-800 p-2 rounded w-1/2"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
+          className="bg-secondary py-1 px-2 rounded w-1/2"
+          value={fontWeight}
+          onChange={(e) => setFontWeight(e.target.value)}
         >
           {selectedFont?.variants
             ?.filter((v) => !v.includes("italic") && v !== "regular")
@@ -154,44 +177,41 @@ export default function FontEditor({
         </select>
         <input
           type="number"
-          className="bg-zinc-800 p-2 rounded w-1/2"
+          min={1}
+          className="bg-secondary py-1 px-2 rounded w-1/2 "
           value={fontSize}
           onChange={(e) => setFontSize(Number(e.target.value))}
-          min={1}
         />
       </div>
 
-      {/* Line Height */}
-      <div>
-        <label className="block mb-1 text-sm">Line Height</label>
-        <input
-          className="bg-zinc-800 p-2 rounded w-full"
-          value={lineHeight}
-          onChange={(e) => setLineHeight(e.target.value)}
-          placeholder="e.g. 1.5, 24px, normal"
-        />
-      </div>
-
-      {/* Text Align */}
-      <div className="flex items-center gap-3">
-        <button onClick={() => setAlign("left")}>
-          <AlignLeft
-            size={18}
-            className={align === "left" ? "text-blue-500" : ""}
+      {/* Line Height & Text Align */}
+      <div className="flex items-end justify-between">
+        <div className="w-full">
+          <label className="block mb-1 text-[10px]">Line Height</label>
+          <input
+            className="bg-secondary py-1 px-2 rounded w-full"
+            value={lineHeight}
+            onChange={(e) => setLineHeight(e.target.value)}
+            placeholder="e.g. 1.5, 24px, normal"
           />
-        </button>
-        <button onClick={() => setAlign("center")}>
-          <AlignCenter
-            size={18}
-            className={align === "center" ? "text-blue-500" : ""}
-          />
-        </button>
-        <button onClick={() => setAlign("right")}>
-          <AlignRight
-            size={18}
-            className={align === "right" ? "text-blue-500" : ""}
-          />
-        </button>
+        </div>
+        <div className="flex items-center gap-3 pl-3">
+          <button onClick={() => setTextAlign("left")}>
+            <AlignLeft
+              className={textAlign === "left" ? "text-blue-500" : ""}
+            />
+          </button>
+          <button onClick={() => setTextAlign("center")}>
+            <AlignCenter
+              className={textAlign === "center" ? "text-blue-500" : ""}
+            />
+          </button>
+          <button onClick={() => setTextAlign("right")}>
+            <AlignRight
+              className={textAlign === "right" ? "text-blue-500" : ""}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

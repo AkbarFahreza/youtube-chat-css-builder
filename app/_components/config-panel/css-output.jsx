@@ -2,6 +2,7 @@ import React from "react";
 import CodeBlock from "../code-bock";
 
 export default function CssOutput({ cssOutput }) {
+  console.log(cssOutput);
   const copyToClipboard = () => {
     navigator.clipboard.writeText(cssOutput.trim());
     alert("CSS copied to clipboard!");

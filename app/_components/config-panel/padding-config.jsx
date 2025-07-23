@@ -26,7 +26,7 @@ export default function PaddingConfig({
   ];
 
   return (
-    <div className="pt-3 pb-4 h-full border-b-[#383838] border-b flex w-full flex-col justify-between group pl-3">
+    <div className="pt-3 pb-4 h-full border-b-[#383838] border-b flex w-full flex-col justify-between group ">
       <div className="flex-row flex justify-between">
         <p className="font-bold text-purple-500 mb-1  font-base">{label}</p>
         <X
@@ -35,26 +35,23 @@ export default function PaddingConfig({
           onClick={onDelete}
         />
       </div>
-      <div className="flex flex-row flex-wrap justify-between">
+      <div className="flex flex-row gap-2 flex-wrap ">
         {opts.map((opt) => (
-          <div
-            className="flex flex-row items-center gap-[4px] mt-3"
-            key={opt.label}
-          >
+          <div className="flex flex-col   gap-[2px] mt-3" key={opt.label}>
             <p className="text-white/70 min-w-[50px] text-[12px] text-left mb-1 pt-1">
               {opt.label}
             </p>
             <input
               type="number"
               min={0}
-              className="rz-input"
+              className="bg-secondary py-1 px-2 rounded outline-0"
               value={safePadding[opt.value]} // now safe
               onChange={(e) => {
                 const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
                 e.target.value = cleaned;
                 handlePaddingChange(opt.value, e.target.value);
               }}
-              style={{ width: 40, marginLeft: 8, marginRight: 6 }}
+              style={{ width: 57 }}
             />
           </div>
         ))}

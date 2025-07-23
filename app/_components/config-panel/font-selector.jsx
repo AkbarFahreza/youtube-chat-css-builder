@@ -26,18 +26,18 @@ export default function FontSelector({ fonts, fontFamily, setFontFamily }) {
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="bg-zinc-800 p-2 rounded w-full flex items-center justify-between"
+        className="bg-secondary py-1 px-2 rounded w-full flex items-center justify-between"
       >
         <span>{fontFamily || "Select Font"}</span>
         <ChevronDown size={18} />
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-1 bg-zinc-900 border border-zinc-700 rounded w-full max-h-64 overflow-auto shadow-lg">
+        <div className="absolute z-10 mt-1 bg-secondary border border-white/20  rounded w-full max-h-64 overflow-auto shadow-lg">
           <input
             type="text"
             placeholder="Search font..."
-            className="w-full px-3 py-2 bg-zinc-800 border-b border-zinc-700 outline-none"
+            className="w-full px-3 py-2  border-b  outline-none"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

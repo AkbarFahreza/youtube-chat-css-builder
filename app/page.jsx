@@ -3,6 +3,7 @@ import { useState } from "react";
 import ViewerChat from "./_components/general-chats/viewer-chat";
 import ConfigSection from "./_components/element-tree/element-tree";
 import ConfigWrapper from "./_components/config-panel/config-wrapper";
+import Link from "next/link";
 
 export default function Home() {
   // Content section state
@@ -21,11 +22,12 @@ export default function Home() {
   const [msgActive, setMsgActive] = useState([]);
   // name config
   const [nameFontFamily, setNameFontFamily] = useState("Inter");
+  const [nameFontColor, setNameFontColor] = useState("#ffffff");
   const [nameFontWeight, setNameFontWeight] = useState("400");
   const [nameLineHeight, setNameLineHeight] = useState("normal");
   const [nameTextAlign, setNameTextAlign] = useState("left");
   const [nameBgColor, setNameBgColor] = useState("#a819fe");
-  const [nameFontSize, setNameFontSize] = useState(16);
+  const [nameFontSize, setNameFontSize] = useState(15);
   const [namePadding, setNamePadding] = useState({
     top: 2,
     right: 2,
@@ -39,7 +41,7 @@ export default function Home() {
   const [msgLineHeight, setMsgLineHeight] = useState("normal");
   const [msgTextAlign, setMsgTextAlign] = useState("left");
   const [msgBgColor, setMsgBgColor] = useState("#a819fe");
-  const [msgFontSize, setMsgFontSize] = useState(16);
+  const [msgFontSize, setMsgFontSize] = useState(15);
   const [msgPadding, setMsgPadding] = useState({
     top: 2,
     right: 2,
@@ -68,60 +70,39 @@ export default function Home() {
 
   //============= Viewer Name config =============
   if (
-    nameActive.includes("nameFontSize") ||
+    nameActive.includes("nameFontFamily") ||
     nameActive.includes("namePadding") ||
     nameActive.includes("nameBgColor")
   ) {
     cssOutput += `yt-live-chat-message-renderer #author-name {\n`;
-
-    if (nameActive.includes("nameFontSize")) {
-      cssOutput += `  font-size: ${nameFontSize}px;\n`;
-    }
-    if (nameActive.includes("nameFontWeight")) {
-      cssOutput += `  font-weight: ${nameFontWeight};\n`;
-    }
-    if (nameActive.includes("nameFontFamily")) {
-      cssOutput += `  font-family: '${nameFontFamily}', sans-serif;\n`;
-    }
-    if (nameActive.includes("nameLineHeight")) {
-      cssOutput += `  line-height: ${nameLineHeight};\n`;
-    }
-    if (nameActive.includes("nameTextAlign")) {
-      cssOutput += `  text-align: ${nameTextAlign};\n`;
-    }
-
+    cssOutput += `  font-family: "${nameFontFamily}" !important;\n`;
+    cssOutput += `  color: ${nameFontColor} !important;\n`;
+    cssOutput += `  font-size: ${nameFontSize}px !important;\n`;
+    cssOutput += `  font-weight: ${nameFontWeight}px !important;\n`;
+    cssOutput += `  line-height: ${nameLineHeight} !important;\n`;
+    cssOutput += `  text-align: ${nameTextAlign} !important;\n`;
     if (nameActive.includes("namePadding")) {
-      cssOutput += `  padding: ${padding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px;\n`;
+      cssOutput += `  padding: ${padding.top}px ${namePadding.right}px ${namePadding.bottom}px ${namePadding.left}px !important;\n`;
     }
     if (nameActive.includes("nameBgColor")) {
-      cssOutput += `  background-color: ${nameBgColor};\n`;
+      cssOutput += `  background-color: ${nameBgColor} !important;\n`;
     }
     cssOutput += `}\n\n`;
   }
 
   //============= Viewer Message config =============
   if (
-    msgActive.includes("msgFontSize") ||
+    msgActive.includes("msgFontFamily") ||
     msgActive.includes("msgPadding") ||
     msgActive.includes("msgBgColor")
   ) {
     cssOutput += `yt-live-chat-message-renderer #message {\n`;
+    cssOutput += `  font-family: "${msgFontFamily}" !important;\n`;
+    cssOutput += `  font-size: ${msgFontSize}px !important;\n`;
+    cssOutput += `  font-weight: ${msgFontWeight}px !important;\n`;
+    cssOutput += `  line-height: ${msgLineHeight} !important;\n`;
+    cssOutput += `  text-align: ${msgTextAlign} !important;\n`;
 
-    if (msgActive.includes("msgFontSize")) {
-      cssOutput += `  font-size: ${msgFontSize}px;\n`;
-    }
-    if (msgActive.includes("msgFontWeight")) {
-      cssOutput += `  font-weight: ${msgFontWeight};\n`;
-    }
-    if (msgActive.includes("msgFontFamily")) {
-      cssOutput += `  font-family: '${msgFontFamily}', sans-serif;\n`;
-    }
-    if (msgActive.includes("msgLineHeight")) {
-      cssOutput += `  line-height: ${msgLineHeight};\n`;
-    }
-    if (msgActive.includes("msgTextAlign")) {
-      cssOutput += `  text-align: ${msgTextAlign};\n`;
-    }
     if (msgActive.includes("msgPadding")) {
       cssOutput += `  padding: ${padding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px;\n`;
     }
@@ -143,47 +124,58 @@ export default function Home() {
           className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
           id="element-tree "
         >
-          <ConfigSection
-            title="Viewer Chat"
-            options={[
-              { label: "Add Padding", value: "padding" },
-              { label: "Flex Direction", value: "flexDirection" },
-            ]}
-            activeOptions={contentActive}
-            onAddOption={(opt) =>
-              setContentActive((prev) =>
-                prev.includes(opt) ? prev : [...prev, opt]
-              )
-            }
-            subSections={[
-              {
-                title: "Name",
-                options: [
-                  { label: "Background Color", value: "nameBgColor" },
-                  { label: "Font Family", value: "nameFontFamily" },
-                  { label: "Padding", value: "namePadding" },
-                ],
-                activeOptions: nameActive,
-                onAddOption: (opt) =>
-                  setNameActive((prev) =>
-                    prev.includes(opt) ? prev : [...prev, opt]
-                  ),
-              },
-              {
-                title: "Message",
-                options: [
-                  { label: "Background Color", value: "msgBgColor" },
-                  { label: "Font Family", value: "msgFontFamily" },
-                  { label: "Padding", value: "msgPadding" },
-                ],
-                activeOptions: msgActive,
-                onAddOption: (opt) =>
-                  setMsgActive((prev) =>
-                    prev.includes(opt) ? prev : [...prev, opt]
-                  ),
-              },
-            ]}
-          />
+          <div className="min-h-[90vh]">
+            <ConfigSection
+              title="Viewer Chat"
+              options={[
+                { label: "Add Padding", value: "padding" },
+                { label: "Flex Direction", value: "flexDirection" },
+              ]}
+              activeOptions={contentActive}
+              onAddOption={(opt) =>
+                setContentActive((prev) =>
+                  prev.includes(opt) ? prev : [...prev, opt]
+                )
+              }
+              subSections={[
+                {
+                  title: "Name",
+                  options: [
+                    { label: "Background Color", value: "nameBgColor" },
+                    { label: "Font Family", value: "nameFontFamily" },
+                    { label: "Padding", value: "namePadding" },
+                  ],
+                  activeOptions: nameActive,
+                  onAddOption: (opt) =>
+                    setNameActive((prev) =>
+                      prev.includes(opt) ? prev : [...prev, opt]
+                    ),
+                },
+                {
+                  title: "Message",
+                  options: [
+                    { label: "Background Color", value: "msgBgColor" },
+                    { label: "Font Family", value: "msgFontFamily" },
+                    { label: "Padding", value: "msgPadding" },
+                  ],
+                  activeOptions: msgActive,
+                  onAddOption: (opt) =>
+                    setMsgActive((prev) =>
+                      prev.includes(opt) ? prev : [...prev, opt]
+                    ),
+                },
+              ]}
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="text-[10px]">Developed By :</p>
+            <Link
+              href="https://x.com/Revernry"
+              className="hover:text-purple-500 transition-all duration-200 font-bold text-base"
+            >
+              DekReza
+            </Link>
+          </div>
         </div>
         <div className="flex flex-col p-4 h-full justify-center items-center">
           <ViewerChat
@@ -200,6 +192,7 @@ export default function Home() {
               fontSize: nameFontSize,
               fontWeight: nameFontWeight,
               fontFamily: `'${nameFontFamily}'`,
+              color: nameFontColor,
               lineHeight: nameLineHeight,
               textAlign: nameTextAlign,
               padding: nameActive.includes("namePadding")
@@ -210,21 +203,11 @@ export default function Home() {
               backgroundColor: msgActive.includes("msgBgColor")
                 ? msgBgColor
                 : undefined,
-              fontSize: msgActive.includes("msgFontSize")
-                ? `${msgFontSize}px`
-                : undefined,
-              fontWeight: msgActive.includes("msgFontWeight")
-                ? msgFontWeight
-                : undefined,
-              fontFamily: msgActive.includes("msgFontFamily")
-                ? `'${msgFontFamily}', sans-serif !important`
-                : undefined,
-              lineHeight: msgActive.includes("msgLineHeight")
-                ? msgLineHeight
-                : undefined,
-              textAlign: msgActive.includes("msgTextAlign")
-                ? msgTextAlign
-                : undefined,
+              fontSize: msgFontSize,
+              fontWeight: msgFontWeight,
+              fontFamily: `'${msgFontFamily}'`,
+              lineHeight: msgLineHeight,
+              textAlign: msgTextAlign,
               padding: msgActive.includes("msgPadding")
                 ? `${msgPadding.top}px ${msgPadding.right}px ${msgPadding.bottom}px ${msgPadding.left}px`
                 : undefined,
@@ -244,6 +227,8 @@ export default function Home() {
           setNameActive={setNameActive}
           nameFontFamily={nameFontFamily}
           setNameFontFamily={setNameFontFamily}
+          nameFontColor={nameFontColor}
+          setNameFontColor={setNameFontColor}
           nameFontWeight={nameFontWeight}
           setNameFontWeight={setNameFontWeight}
           nameLineHeight={nameLineHeight}

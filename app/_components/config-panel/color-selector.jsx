@@ -35,10 +35,10 @@ export default function ColorSelector({
   }, [onChange]);
 
   return (
-    <div className="w-full group flex flex-row justify-between pl-2 py-10 border-b border-b-[#383838] items-center max-h-[50px]">
+    <div className="w-full group flex flex-row justify-between  py-10 border-b border-b-[#383838] items-center max-h-[50px]">
       <div className="flex flex-col w-full">
         <div className="flex flew-row justify-between">
-          <p className="text-purple-400 font-bold">{label}</p>
+          <p className="text-purple-500 font-bold">{label}</p>
           <X
             className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
             size={17}
