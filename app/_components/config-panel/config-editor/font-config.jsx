@@ -141,10 +141,10 @@ export default function FontEditor({
   }, [onChange]);
 
   return (
-    <div className="pt-3 pb-4 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
+    <div className="py-5 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
       {/* Header */}
-      <div className="flex justify-between items-center pb-2">
-        <p className="font-bold text-white ">{label}</p>
+      <div className="flex justify-between items-center pb-2 px-4">
+        <p className="text-white ">{label}</p>
         <X
           className="cursor-pointer text-red-500 opacity-0 group-hover:opacity-100 transition"
           size={17}
@@ -153,7 +153,7 @@ export default function FontEditor({
       </div>
 
       {/* Font Selector + Color */}
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center px-4">
         <FontSelector
           selectedFont={selectedFont}
           fonts={fonts}
@@ -164,16 +164,16 @@ export default function FontEditor({
           ref={inputRef}
           type="text"
           data-coloris
-          className="coloris bg-secondary py-1 px-2 rounded w-[90px]"
+          className="coloris bg-secondary py-1 px-3 rounded w-[90px]"
           value={fontColor}
           onChange={(e) => setFontColor(e.target.value)}
         />
       </div>
 
       {/* Weight & Size */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 px-4">
         <select
-          className="bg-secondary py-1 px-2 rounded w-1/2"
+          className="bg-secondary py-1 px-3 rounded w-1/2"
           value={fontWeight}
           onChange={(e) => setFontWeight(e.target.value)}
         >
@@ -188,7 +188,7 @@ export default function FontEditor({
         <input
           type="number"
           min={1}
-          className="bg-secondary py-1 px-2 rounded w-1/2 "
+          className="bg-secondary py-1 px-3 rounded w-1/2 "
           value={fontSize}
           onClick={(e) => {
             if (!clickedOnce.current) {
@@ -208,11 +208,13 @@ export default function FontEditor({
       </div>
 
       {/* Line Height & Text Align */}
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between px-4">
         <div className="w-full">
-          <label className="block mb-1 text-[10px]">Line Height</label>
+          <label className="block mb-1 text-white/70 text-xs">
+            Line Height
+          </label>
           <input
-            className="bg-secondary py-1 px-2 rounded w-full"
+            className="bg-secondary py-1 px-3 rounded w-full"
             value={lineHeight}
             onChange={(e) => setLineHeight(e.target.value)}
             placeholder="e.g. 1.5, 24px, normal"

@@ -32,23 +32,23 @@ export default function PaddingConfig({
   ];
 
   return (
-    <div className="pt-3 pb-4 border-b group border-white/20 flex flex-col space-y-3">
-      <div className="flex flew-row justify-between pb-2">
-        <p className="font-bold">{label}</p>
+    <div className="pt-4 pb-5 border-b group border-white/20 flex flex-col space-y-3">
+      <div className="flex px-4 flew-row justify-between pb-2">
+        <p className="text-white">{label}</p>
         <X
           className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
           size={17}
           onClick={onDelete}
         />
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 px-4">
         {sides.map((side) => (
           <div key={side.value} className="flex flex-col">
             <span className="text-white/70 text-xs">{side.label}</span>
             <input
               type="number"
               min={0}
-              className="bg-secondary p-1 rounded text-sm text-white outline-none"
+              className="bg-secondary py-1 px-3 rounded text-sm text-white outline-none"
               value={safePadding[side.value]}
               onClick={(e) => {
                 if (!clickedOnce.current) {

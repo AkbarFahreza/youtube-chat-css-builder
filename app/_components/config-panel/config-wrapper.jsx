@@ -12,7 +12,10 @@ const FlexDirOpts = [
   { label: "row", value: "row" },
   { label: "column", value: "column" },
 ];
-
+function formatLabel(text) {
+  const withSpaces = text.replace(/([A-Z])/g, " $1").trim();
+  return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
+}
 export default function ConfigWrapper({
   generalConfig,
   updateGeneralConfig,
@@ -25,9 +28,9 @@ export default function ConfigWrapper({
   return (
     <div
       id="config-wrapper"
-      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-[#383838] px-3"
+      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-secondary "
     >
-      <div className="flex flex-row gap-1 pb-2">
+      <div className="flex flex-row gap-1 pb-2 px-3">
         {["design", "output"].map((m) => (
           <button
             key={m}
@@ -57,9 +60,9 @@ export default function ConfigWrapper({
 
 function Section({ title, collapsed, setCollapsed, children }) {
   return (
-    <div className="pr-3">
+    <div className="">
       <div
-        className="py-3 border-b-white/20 border-b rounded-md flex flex-row justify-between items-center"
+        className="py-3 px-3 border-b-white/20 border-b  flex flex-row justify-between items-center"
         onClick={() => setCollapsed(!collapsed)}
       >
         <p className="font-bold text-purple-500 text-base">{title}</p>
@@ -82,6 +85,7 @@ function FontAndColorControls({
   updateRoleConfig,
   prefix,
 }) {
+  console.log(prefix);
   const deleteFont = () => {
     [
       ["fontFamily", "Inter"],
@@ -103,7 +107,7 @@ function FontAndColorControls({
     <>
       {config.active.includes(`${prefix}BgColor`) && (
         <ColorSelector
-          label="Background Color"
+          label={formatLabel(`${prefix}Background Color`)}
           inputValue={config.bgColor}
           onChange={(e) =>
             updateRoleConfig(role, type, "bgColor", e.target.value)
@@ -122,7 +126,7 @@ function FontAndColorControls({
 
       {config.active.includes(`${prefix}FontFamily`) && (
         <FontEditor
-          label="Font"
+          label={formatLabel(`${prefix} Font`)}
           value={config}
           onChange={(val) => {
             Object.entries(val).forEach(([key, v]) =>
@@ -135,7 +139,7 @@ function FontAndColorControls({
 
       {config.active.includes(`${prefix}Padding`) && (
         <PaddingConfig
-          label="Padding"
+          label={formatLabel(`${prefix} Padding`)}
           padding={config.padding}
           setPadding={(p) => updateRoleConfig(role, type, "padding", p)}
           onDelete={() => {

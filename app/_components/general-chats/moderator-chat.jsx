@@ -7,6 +7,7 @@ import Image from "next/image";
 function ModeratorChat({
   padding,
   flexDirection,
+
   authorNameStyle,
   authorMsgStyle,
 }) {

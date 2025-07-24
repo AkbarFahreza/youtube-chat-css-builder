@@ -26,7 +26,7 @@ export default function FontSelector({ fonts, fontFamily, setFontFamily }) {
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="bg-secondary py-1 px-2 rounded w-full flex items-center justify-between"
+        className="bg-secondary py-1 px-3 rounded w-full flex items-center justify-between"
       >
         <span>{fontFamily || "Select Font"}</span>
         <ChevronDown size={18} />

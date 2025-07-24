@@ -10,7 +10,7 @@ export function FontSizeConfig({
 }) {
   return (
     <div className="w-full group flex flex-row justify-between py-9 gap-3 border-b border-b-[#383838] items-center max-h-[50px] pl-3">
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col px-4">
         <div className="flex flex-row justify-between ">
           <p className="text-purple-500 font-bold">{label}</p>
           <X
