@@ -1,58 +1,52 @@
 "use client";
-import PaddingConfig from "./config-editor/padding-config";
-// import { BooleanConfig, FontSizeConfig } from "./style-config";
-import ColorSelector from "./config-editor/color-selector";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import CssOutput from "./css-output";
-import { BooleanSelector } from "./config-editor/boolean-selector";
+import PaddingConfig from "./config-editor/padding-config";
+import ColorSelector from "./config-editor/color-selector";
 import FontEditor from "./config-editor/font-config";
+import { BooleanSelector } from "./config-editor/boolean-selector";
+import CssOutput from "./css-output";
+
+const defaultPadding = { top: 2, right: 2, bottom: 2, left: 2 };
+const FlexDirOpts = [
+  { label: "row", value: "row" },
+  { label: "column", value: "column" },
+];
 
 export default function ConfigWrapper({
   generalConfig,
   updateGeneralConfig,
-  nameConfig,
-  updateNameConfig,
-  msgConfig,
-  updateMsgConfig,
+  roleConfigs,
+  updateRoleConfig,
   cssOutput,
 }) {
   const [mode, setMode] = useState("design");
+
   return (
     <div
       id="config-wrapper"
-      className="max-w-[400px] bg-main  flex-1 border-l pt-3 border-[#383838] px-3"
+      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-[#383838] px-3"
     >
       <div className="flex flex-row gap-1 pb-2">
-        <button
-          className={`py-1 px-3 rounded-md  hover:bg-[#383838] ${
-            mode === "design" ? "bg-[#383838] text-white" : "text-white/55"
-          }`}
-          onClick={() => {
-            setMode("design");
-          }}
-        >
-          Configure
-        </button>
-        <button
-          className={`py-1 px-3 rounded-md  hover:bg-[#383838] ${
-            mode === "output" ? "bg-[#383838] text-white" : "text-white/55"
-          }`}
-          onClick={() => {
-            setMode("output");
-          }}
-        >
-          Output Code
-        </button>
+        {["design", "output"].map((m) => (
+          <button
+            key={m}
+            className={`py-1 px-3 rounded-md hover:bg-[#383838] ${
+              mode === m ? "bg-[#383838] text-white" : "text-white/55"
+            }`}
+            onClick={() => setMode(m)}
+          >
+            {m === "design" ? "Configure" : "Output Code"}
+          </button>
+        ))}
       </div>
+
       {mode === "design" ? (
         <ChatConfigPanel
           generalConfig={generalConfig}
           updateGeneralConfig={updateGeneralConfig}
-          nameConfig={nameConfig}
-          updateNameConfig={updateNameConfig}
-          msgConfig={msgConfig}
-          updateMsgConfig={updateMsgConfig}
+          roleConfigs={roleConfigs}
+          updateRoleConfig={updateRoleConfig}
         />
       ) : (
         <CssOutput cssOutput={cssOutput} />
@@ -60,27 +54,15 @@ export default function ConfigWrapper({
     </div>
   );
 }
-function ChatConfigPanel({
-  generalConfig,
-  updateGeneralConfig,
-  nameConfig,
-  updateNameConfig,
-  msgConfig,
-  updateMsgConfig,
-}) {
-  const FlexDirOpts = [
-    { label: "row", value: "row" },
-    { label: "column", value: "column" },
-  ];
-  const [collapsed, setCollapsed] = useState(false);
 
+function Section({ title, collapsed, setCollapsed, children }) {
   return (
-    <div className="max-h-[90vh] min-h-[90vh] pr-3 overflow-y-scroll scrollbar">
+    <div className="pr-3">
       <div
-        className="py-3 border-b-secondary border-b rounded-md flex flex-row justify-between items-center"
+        className="py-3 border-b-white/20 border-b rounded-md flex flex-row justify-between items-center"
         onClick={() => setCollapsed(!collapsed)}
       >
-        <p className="font-bold text-white">Viewer Chat Config</p>
+        <p className="font-bold text-purple-500 text-base">{title}</p>
         <ChevronDown
           size={18}
           className={`${
@@ -88,187 +70,188 @@ function ChatConfigPanel({
           } transition-all duration-200`}
         />
       </div>
+      {!collapsed && children}
+    </div>
+  );
+}
 
-      <div className={`${collapsed ? "hidden" : ""}`}>
-        {/* General Content Configs */}
-        {generalConfig.contentActive.includes("padding") && (
-          <PaddingConfig
-            label="Content Padding"
-            padding={generalConfig.padding}
-            setPadding={(p) => updateGeneralConfig("padding", p)}
-            onDelete={() => {
-              updateGeneralConfig("padding", {
-                top: 2,
-                right: 2,
-                bottom: 2,
-                left: 2,
-              });
-              updateGeneralConfig(
-                "contentActive",
-                generalConfig.contentActive.filter((opt) => opt !== "padding")
-              );
-            }}
-          />
-        )}
+function FontAndColorControls({
+  role,
+  type,
+  config,
+  updateRoleConfig,
+  prefix,
+}) {
+  const deleteFont = () => {
+    [
+      ["fontFamily", "Inter"],
+      ["fontColor", "#ffffff"],
+      ["fontWeight", "400"],
+      ["lineHeight", "normal"],
+      ["textAlign", "left"],
+      ["fontSize", 15],
+    ].forEach(([key, val]) => updateRoleConfig(role, type, key, val));
+    updateRoleConfig(
+      role,
+      type,
+      "active",
+      config.active.filter((o) => o !== `${prefix}FontFamily`)
+    );
+  };
 
-        {generalConfig.contentActive.includes("flexDirection") && (
-          <BooleanSelector
-            label="Content Flex Direction"
-            opts={FlexDirOpts}
-            value={generalConfig.flexDirection}
-            setValue={(v) => updateGeneralConfig("flexDirection", v)}
-            onDelete={() => {
-              updateGeneralConfig("flexDirection", "row");
-              updateGeneralConfig(
-                "contentActive",
-                generalConfig.contentActive.filter(
-                  (opt) => opt !== "flexDirection"
-                )
-              );
-            }}
-          />
-        )}
+  return (
+    <>
+      {config.active.includes(`${prefix}BgColor`) && (
+        <ColorSelector
+          label="Background Color"
+          inputValue={config.bgColor}
+          onChange={(e) =>
+            updateRoleConfig(role, type, "bgColor", e.target.value)
+          }
+          onDelete={() => {
+            updateRoleConfig(role, type, "bgColor", "#a819fe");
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((o) => o !== `${prefix}BgColor`)
+            );
+          }}
+        />
+      )}
 
-        {/* Name Configs */}
-        {nameConfig.active.includes("nameBgColor") && (
-          <ColorSelector
-            label="Name Background Color"
-            inputValue={nameConfig.bgColor}
-            onChange={(e) => updateNameConfig("bgColor", e.target.value)}
-            onDelete={() => {
-              updateNameConfig("bgColor", "#a819fe");
-              updateNameConfig(
-                "active",
-                nameConfig.active.filter((opt) => opt !== "nameBgColor")
-              );
-            }}
-          />
-        )}
+      {config.active.includes(`${prefix}FontFamily`) && (
+        <FontEditor
+          label="Font"
+          value={config}
+          onChange={(val) => {
+            Object.entries(val).forEach(([key, v]) =>
+              updateRoleConfig(role, type, key, v)
+            );
+          }}
+          onDelete={deleteFont}
+        />
+      )}
 
-        {nameConfig.active.includes("nameFontFamily") && (
-          <FontEditor
-            label="Name Font"
-            value={{
-              fontFamily: nameConfig.fontFamily,
-              fontColor: nameConfig.fontColor,
-              fontWeight: nameConfig.fontWeight,
-              lineHeight: nameConfig.lineHeight,
-              textAlign: nameConfig.textAlign,
-              fontSize: nameConfig.fontSize,
-            }}
-            onChange={(val) => {
-              updateNameConfig("fontFamily", val.fontFamily);
-              updateNameConfig("fontColor", val.fontColor);
-              updateNameConfig("fontWeight", val.fontWeight);
-              updateNameConfig("lineHeight", val.lineHeight);
-              updateNameConfig("textAlign", val.textAlign);
-              updateNameConfig("fontSize", val.fontSize);
-            }}
-            onDelete={() => {
-              updateNameConfig("fontFamily", "Inter");
-              updateNameConfig("fontColor", "#ffffff");
-              updateNameConfig("fontWeight", "400");
-              updateNameConfig("lineHeight", "normal");
-              updateNameConfig("textAlign", "left");
-              updateNameConfig("fontSize", 15);
-              updateNameConfig(
-                "active",
-                nameConfig.active.filter((o) => o !== "nameFontFamily")
-              );
-            }}
-          />
-        )}
+      {config.active.includes(`${prefix}Padding`) && (
+        <PaddingConfig
+          label="Padding"
+          padding={config.padding}
+          setPadding={(p) => updateRoleConfig(role, type, "padding", p)}
+          onDelete={() => {
+            updateRoleConfig(role, type, "padding", defaultPadding);
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((opt) => opt !== `${prefix}Padding`)
+            );
+          }}
+        />
+      )}
+    </>
+  );
+}
 
-        {nameConfig.active.includes("namePadding") && (
-          <PaddingConfig
-            label="Name Padding"
-            padding={nameConfig.padding}
-            setPadding={(updated) => updateNameConfig("padding", updated)}
-            onDelete={() => {
-              updateNameConfig("padding", {
-                top: 2,
-                right: 2,
-                bottom: 2,
-                left: 2,
-              });
-              updateNameConfig(
-                "active",
-                nameConfig.active.filter((opt) => opt !== "namePadding")
-              );
-            }}
-          />
-        )}
+function GeneralControls({ generalConfig, updateGeneralConfig }) {
+  return (
+    <>
+      {generalConfig.contentActive.includes("padding") && (
+        <PaddingConfig
+          label="Content Padding"
+          padding={generalConfig.padding}
+          setPadding={(p) => updateGeneralConfig("padding", p)}
+          onDelete={() => {
+            updateGeneralConfig("padding", defaultPadding);
+            updateGeneralConfig(
+              "contentActive",
+              generalConfig.contentActive.filter((opt) => opt !== "padding")
+            );
+          }}
+        />
+      )}
 
-        {/* Message Configs */}
-        {msgConfig.active.includes("msgBgColor") && (
-          <ColorSelector
-            label="Message Background Color"
-            inputValue={msgConfig.bgColor}
-            onChange={(e) => updateMsgConfig("bgColor", e.target.value)}
-            onDelete={() => {
-              updateMsgConfig("bgColor", "#a819fe");
-              updateMsgConfig(
-                "active",
-                msgConfig.active.filter((opt) => opt !== "msgBgColor")
-              );
-            }}
-          />
-        )}
+      {generalConfig.contentActive.includes("flexDirection") && (
+        <BooleanSelector
+          label="Content Flex Direction"
+          opts={FlexDirOpts}
+          value={generalConfig.flexDirection}
+          setValue={(v) => updateGeneralConfig("flexDirection", v)}
+          onDelete={() => {
+            updateGeneralConfig("flexDirection", "row");
+            updateGeneralConfig(
+              "contentActive",
+              generalConfig.contentActive.filter(
+                (opt) => opt !== "flexDirection"
+              )
+            );
+          }}
+        />
+      )}
+    </>
+  );
+}
 
-        {msgConfig.active.includes("msgFontFamily") && (
-          <FontEditor
-            label="Message Font"
-            value={{
-              fontFamily: msgConfig.fontFamily,
-              fontColor: nameConfig.fontColor,
-              fontWeight: msgConfig.fontWeight,
-              lineHeight: msgConfig.lineHeight,
-              textAlign: msgConfig.textAlign,
-              fontSize: msgConfig.fontSize,
-            }}
-            onChange={(val) => {
-              updateMsgConfig("fontFamily", val.fontFamily);
-              updateMsgConfig("fontColor", val.fontColor);
-              updateMsgConfig("fontWeight", val.fontWeight);
-              updateMsgConfig("lineHeight", val.lineHeight);
-              updateMsgConfig("textAlign", val.textAlign);
-              updateMsgConfig("fontSize", val.fontSize);
-            }}
-            onDelete={() => {
-              updateMsgConfig("fontFamily", "Inter");
-              updateMsgConfig("fontColor", "#ffffff");
-              updateMsgConfig("fontWeight", "400");
-              updateMsgConfig("lineHeight", "normal");
-              updateMsgConfig("textAlign", "left");
-              updateMsgConfig("fontSize", 15);
-              updateMsgConfig(
-                "active",
-                msgConfig.active.filter((o) => o !== "msgFontFamily")
-              );
-            }}
-          />
-        )}
+function ChatConfigPanel({
+  generalConfig,
+  updateGeneralConfig,
+  roleConfigs,
+  updateRoleConfig,
+}) {
+  const [viewerCollapsed, setViewerCollapsed] = useState(false);
+  const [modCollapsed, setModCollapsed] = useState(false);
 
-        {msgConfig.active.includes("msgPadding") && (
-          <PaddingConfig
-            label="Message Padding"
-            padding={msgConfig.padding}
-            setPadding={(p) => updateMsgConfig("padding", p)}
-            onDelete={() => {
-              updateMsgConfig("padding", {
-                top: 2,
-                right: 2,
-                bottom: 2,
-                left: 2,
-              });
-              updateMsgConfig(
-                "active",
-                msgConfig.active.filter((opt) => opt !== "msgPadding")
-              );
-            }}
-          />
-        )}
-      </div>
+  return (
+    <div className="max-h-[90vh] overflow-y-scroll scrollbar">
+      <Section
+        title="Viewer Chat Config"
+        collapsed={viewerCollapsed}
+        setCollapsed={setViewerCollapsed}
+      >
+        <GeneralControls
+          generalConfig={generalConfig}
+          updateGeneralConfig={updateGeneralConfig}
+        />
+        <FontAndColorControls
+          role="viewer"
+          type="name"
+          config={roleConfigs.viewer.name}
+          updateRoleConfig={updateRoleConfig}
+          prefix="name"
+        />
+        <FontAndColorControls
+          role="viewer"
+          type="message"
+          config={roleConfigs.viewer.message}
+          updateRoleConfig={updateRoleConfig}
+          prefix="msg"
+        />
+      </Section>
+
+      <Section
+        title="Moderator Chat Config"
+        collapsed={modCollapsed}
+        setCollapsed={setModCollapsed}
+      >
+        <GeneralControls
+          generalConfig={generalConfig}
+          updateGeneralConfig={updateGeneralConfig}
+        />
+        <FontAndColorControls
+          role="moderator"
+          type="name"
+          config={roleConfigs.moderator.name}
+          updateRoleConfig={updateRoleConfig}
+          prefix="modName"
+        />
+        <FontAndColorControls
+          role="moderator"
+          type="message"
+          config={roleConfigs.moderator.message}
+          updateRoleConfig={updateRoleConfig}
+          prefix="modMsg"
+        />
+      </Section>
     </div>
   );
 }

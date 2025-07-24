@@ -1,6 +1,7 @@
 // config-editor/padding-config.jsx
 "use client";
 import React from "react";
+import { useRef } from "react";
 import { X } from "lucide-react";
 
 export default function PaddingConfig({
@@ -9,7 +10,7 @@ export default function PaddingConfig({
   onDelete,
   label,
 }) {
-  // ensure we always have all four sides
+  const clickedOnce = useRef(false);
   const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
   const safePadding = { ...defaultPadding, ...padding };
 
@@ -31,12 +32,12 @@ export default function PaddingConfig({
   ];
 
   return (
-    <div className="pt-3 pb-4 border-b border-white/20 flex flex-col space-y-3">
-      <div className="flex justify-between items-center">
-        <p className="font-bold text-purple-500">{label}</p>
+    <div className="pt-3 pb-4 border-b group border-white/20 flex flex-col space-y-3">
+      <div className="flex flew-row justify-between pb-2">
+        <p className="font-bold">{label}</p>
         <X
+          className="h-full group-hover:opacity-100 opacity-0 cursor-pointer transition-all duration-200 text-red-500 "
           size={17}
-          className="text-red-500 cursor-pointer opacity-0 group-hover:opacity-100 transition"
           onClick={onDelete}
         />
       </div>
@@ -49,7 +50,20 @@ export default function PaddingConfig({
               min={0}
               className="bg-secondary p-1 rounded text-sm text-white outline-none"
               value={safePadding[side.value]}
-              onChange={(e) => handlePaddingChange(side.value, e.target.value)}
+              onClick={(e) => {
+                if (!clickedOnce.current) {
+                  e.target.select();
+                  clickedOnce.current = true;
+                }
+              }}
+              onBlur={() => {
+                clickedOnce.current = false; // reset on blur
+              }}
+              onChange={(e) => {
+                const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
+                e.target.value = cleaned;
+                handlePaddingChange(side.value, e.target.value);
+              }}
               style={{ width: 55 }}
             />
           </div>
