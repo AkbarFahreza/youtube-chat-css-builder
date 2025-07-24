@@ -1,23 +1,37 @@
 "use client";
-import { useState } from "react";
 import ViewerChat from "./_components/general-chats/viewer-chat";
+import ModeratorChat from "./_components/general-chats/moderator-chat";
 import ConfigSection from "./_components/element-tree/element-tree";
 import ConfigWrapper from "./_components/config-panel/config-wrapper";
 import useChatStyleConfig from "./hooks/useChatStyleConfig";
 import Link from "next/link";
 
 export default function Home() {
-  const {
-    generalConfig,
-    updateGeneralConfig,
-    nameConfig,
-    updateMsgConfig,
-    msgConfig,
-    updateNameConfig,
-  } = useChatStyleConfig();
+  const getStyle = (config, prefix) => ({
+    backgroundColor: config.active.includes(`${prefix}BgColor`)
+      ? config.bgColor
+      : undefined,
+    fontSize: config.fontSize,
+    fontWeight: config.fontWeight,
+    fontFamily: `'${config.fontFamily}'`,
+    color: config.fontColor,
+    lineHeight: config.lineHeight,
+    textAlign: config.textAlign,
+    padding: config.active.includes(`${prefix}Padding`)
+      ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
+      : undefined,
+  });
+
+  const { generalConfig, updateGeneralConfig, roleConfigs, updateRoleConfig } =
+    useChatStyleConfig();
+
   // Compose CSS output for all active configs
   let cssOutput = "";
-
+  // const GeneralConfig = generalConfig;
+  const viewerName = roleConfigs.viewer.name;
+  const viewerMsg = roleConfigs.viewer.message;
+  const modName = roleConfigs.moderator.name;
+  const modMsg = roleConfigs.moderator.message;
   // =============================
   // Viewer config
   // =============================
@@ -38,47 +52,47 @@ export default function Home() {
 
   //============= Viewer Name config =============
   if (
-    nameConfig.active.includes("nameFontFamily") ||
-    nameConfig.active.includes("namePadding") ||
-    nameConfig.active.includes("nameBgColor")
+    viewerName.active.includes("nameFontFamily") ||
+    viewerName.active.includes("namePadding") ||
+    viewerName.active.includes("nameBgColor")
   ) {
     cssOutput += `yt-live-chat-message-renderer #author-name {\n`;
-    cssOutput += `  font-family: "${nameConfig.fontFamily}" !important;\n`;
-    cssOutput += `  color: ${nameConfig.fontColor} !important;\n`;
-    cssOutput += `  font-size: ${nameConfig.fontSize}px !important;\n`;
-    cssOutput += `  font-weight: ${nameConfig.fontWeight}px !important;\n`;
-    cssOutput += `  line-height: ${nameConfig.lineHeight} !important;\n`;
-    cssOutput += `  text-align: ${nameConfig.textAlign} !important;\n`;
-    if (nameConfig.active.includes("namePadding")) {
-      const p = nameConfig.padding;
+    cssOutput += `  font-family: "${viewerName.fontFamily}" !important;\n`;
+    cssOutput += `  color: ${viewerName.fontColor} !important;\n`;
+    cssOutput += `  font-size: ${viewerName.fontSize}px !important;\n`;
+    cssOutput += `  font-weight: ${viewerName.fontWeight}px !important;\n`;
+    cssOutput += `  line-height: ${viewerName.lineHeight} !important;\n`;
+    cssOutput += `  text-align: ${viewerName.textAlign} !important;\n`;
+    if (viewerName.active.includes("namePadding")) {
+      const p = viewerName.padding;
       cssOutput += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
     }
-    if (nameConfig.active.includes("nameBgColor")) {
-      cssOutput += `  background-color: ${nameConfig.nameBgColor} !important;\n`;
+    if (viewerName.active.includes("nameBgColor")) {
+      cssOutput += `  background-color: ${viewerName.nameBgColor} !important;\n`;
     }
     cssOutput += `}\n\n`;
   }
 
   //============= Viewer Message config =============
   if (
-    msgConfig.active.includes("msgFontFamily") ||
-    msgConfig.active.includes("msgPadding") ||
-    msgConfig.active.includes("msgBgColor")
+    viewerMsg.active.includes("msgFontFamily") ||
+    viewerMsg.active.includes("msgPadding") ||
+    viewerMsg.active.includes("msgBgColor")
   ) {
     cssOutput += `yt-live-chat-message-renderer #message {\n`;
-    cssOutput += `  font-family: "${msgConfig.fontFamily}" !important;\n`;
-    cssOutput += `  color: ${msgConfig.fontColor} !important;\n`;
-    cssOutput += `  font-size: ${msgConfig.fontSize}px !important;\n`;
-    cssOutput += `  font-weight: ${msgConfig.fontWeight}px !important;\n`;
-    cssOutput += `  line-height: ${msgConfig.lineHeight} !important;\n`;
-    cssOutput += `  text-align: ${msgConfig.textAlign} !important;\n`;
+    cssOutput += `  font-family: "${viewerMsg.fontFamily}" !important;\n`;
+    cssOutput += `  color: ${viewerMsg.fontColor} !important;\n`;
+    cssOutput += `  font-size: ${viewerMsg.fontSize}px !important;\n`;
+    cssOutput += `  font-weight: ${viewerMsg.fontWeight}px !important;\n`;
+    cssOutput += `  line-height: ${viewerMsg.lineHeight} !important;\n`;
+    cssOutput += `  text-align: ${viewerMsg.textAlign} !important;\n`;
 
-    if (msgConfig.active.includes("msgPadding")) {
-      const p = msgConfig.padding;
+    if (viewerMsg.active.includes("msgPadding")) {
+      const p = viewerMsg.padding;
       cssOutput += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
     }
-    if (msgConfig.active.includes("msgBgColor")) {
-      cssOutput += `  background-color: ${msgConfig.bgColor};\n`;
+    if (viewerMsg.active.includes("msgBgColor")) {
+      cssOutput += `  background-color: ${viewerMsg.bgColor};\n`;
     }
     cssOutput += `}\n\n`;
   }
@@ -119,10 +133,14 @@ export default function Home() {
                     { label: "Font Family", value: "nameFontFamily" },
                     { label: "Padding", value: "namePadding" },
                   ],
-                  activeOptions: nameConfig.active,
+                  activeOptions: roleConfigs.viewer.name.active,
                   onAddOption: (opt) => {
-                    if (!nameConfig.active.includes(opt)) {
-                      updateNameConfig("active", [...nameConfig.active, opt]);
+                    const current = roleConfigs.viewer.name.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("viewer", "name", "active", [
+                        ...current,
+                        opt,
+                      ]);
                     }
                   },
                 },
@@ -133,10 +151,68 @@ export default function Home() {
                     { label: "Font Family", value: "msgFontFamily" },
                     { label: "Padding", value: "msgPadding" },
                   ],
-                  activeOptions: msgConfig.active,
+                  activeOptions: roleConfigs.viewer.message.active,
                   onAddOption: (opt) => {
-                    if (!msgConfig.active.includes(opt)) {
-                      updateMsgConfig("active", [...msgConfig.active, opt]);
+                    const current = roleConfigs.viewer.message.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("viewer", "message", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+              ]}
+            />
+            <ConfigSection
+              title="Moderator Chat"
+              options={[
+                { label: "Add Padding", value: "padding" },
+                { label: "Flex Direction", value: "flexDirection" },
+              ]}
+              activeOptions={generalConfig.contentActive}
+              onAddOption={(opt) => {
+                if (!generalConfig.contentActive.includes(opt)) {
+                  updateGeneralConfig("contentActive", [
+                    ...generalConfig.contentActive,
+                    opt,
+                  ]);
+                }
+              }}
+              subSections={[
+                {
+                  title: "Name",
+                  options: [
+                    { label: "Background Color", value: "modNameBgColor" },
+                    { label: "Font Family", value: "modNameFontFamily" },
+                    { label: "Padding", value: "modNamePadding" },
+                  ],
+                  activeOptions: roleConfigs.moderator.name.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.moderator.name.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("moderator", "name", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+                {
+                  title: "Message",
+                  options: [
+                    { label: "Background Color", value: "modMsgBgColor" },
+                    { label: "Font Family", value: "modMsgFontFamily" },
+                    { label: "Padding", value: "modMsgPadding" },
+                  ],
+                  activeOptions: roleConfigs.moderator.message.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.moderator.message.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("moderator", "message", "active", [
+                        ...current,
+                        opt,
+                      ]);
                     }
                   },
                 },
@@ -153,7 +229,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col p-4 h-full justify-center items-center">
+        <div className="flex flex-col p-4 h-full gap-4 justify-center mx-auto">
           <ViewerChat
             padding={generalConfig.padding}
             flexDirection={
@@ -161,43 +237,25 @@ export default function Home() {
                 ? generalConfig.flexDirection
                 : undefined
             }
-            authorNameStyle={{
-              backgroundColor: nameConfig.active.includes("nameBgColor")
-                ? nameConfig.bgColor
-                : undefined,
-              fontSize: nameConfig.fontSize,
-              fontWeight: nameConfig.fontWeight,
-              fontFamily: `'${nameConfig.fontFamily}'`,
-              color: nameConfig.fontColor,
-              lineHeight: nameConfig.lineHeight,
-              textAlign: nameConfig.textAlign,
-              padding: nameConfig.active.includes("namePadding")
-                ? `${nameConfig.padding.top}px ${nameConfig.padding.right}px ${nameConfig.padding.bottom}px ${nameConfig.padding.left}px`
-                : undefined,
-            }}
-            authorMsgStyle={{
-              backgroundColor: msgConfig.active.includes("msgBgColor")
-                ? msgConfig.bgColor
-                : undefined,
-              fontSize: msgConfig.fontSize,
-              fontWeight: msgConfig.fontWeight,
-              fontFamily: `'${msgConfig.fontFamily}'`,
-              color: msgConfig.fontColor,
-              lineHeight: msgConfig.lineHeight,
-              textAlign: msgConfig.textAlign,
-              padding: msgConfig.active.includes("msgPadding")
-                ? `${msgConfig.padding.top}px ${msgConfig.padding.right}px ${msgConfig.padding.bottom}px ${msgConfig.padding.left}px`
-                : undefined,
-            }}
+            authorNameStyle={getStyle(roleConfigs.viewer.name, "name")}
+            authorMsgStyle={getStyle(roleConfigs.viewer.message, "msg")}
+          />
+          <ModeratorChat
+            padding={generalConfig.padding}
+            flexDirection={
+              generalConfig.contentActive.includes("flexDirection")
+                ? generalConfig.flexDirection
+                : undefined
+            }
+            authorNameStyle={getStyle(roleConfigs.moderator.name, "modName")}
+            authorMsgStyle={getStyle(roleConfigs.moderator.message, "modMsg")}
           />
         </div>
         <ConfigWrapper
           generalConfig={generalConfig}
           updateGeneralConfig={updateGeneralConfig}
-          nameConfig={nameConfig}
-          updateNameConfig={updateNameConfig}
-          msgConfig={msgConfig}
-          updateMsgConfig={updateMsgConfig}
+          roleConfigs={roleConfigs}
+          updateRoleConfig={updateRoleConfig}
           cssOutput={cssOutput}
         />
       </div>

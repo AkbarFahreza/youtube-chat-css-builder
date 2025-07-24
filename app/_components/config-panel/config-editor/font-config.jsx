@@ -17,6 +17,7 @@ export default function FontEditor({
   const { fonts, isLoaded, setFonts } = useGoogleFonts();
   const inputRef = useRef(null);
   const prev = useRef({});
+  const clickedOnce = useRef(false);
   // States
   const [fontFamily, setFontFamily] = useState(value?.fontFamily || "Inter");
   const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
@@ -96,8 +97,10 @@ export default function FontEditor({
     );
 
     if (changed) {
-      prev.current = current;
-      onChange?.(current);
+      prev.current = { ...current }; // clone to avoid shared ref
+      if (typeof onChange === "function") {
+        onChange(current);
+      }
     }
   }, [
     cssImport,
@@ -108,7 +111,6 @@ export default function FontEditor({
     fontSize,
     textAlign,
     lineHeight,
-    onChange,
   ]);
 
   // Setup Coloris
@@ -141,8 +143,8 @@ export default function FontEditor({
   return (
     <div className="pt-3 pb-4 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <p className="font-bold text-purple-500">{label}</p>
+      <div className="flex justify-between items-center pb-2">
+        <p className="font-bold text-white ">{label}</p>
         <X
           className="cursor-pointer text-red-500 opacity-0 group-hover:opacity-100 transition"
           size={17}
@@ -188,7 +190,20 @@ export default function FontEditor({
           min={1}
           className="bg-secondary py-1 px-2 rounded w-1/2 "
           value={fontSize}
-          onChange={(e) => setFontSize(Number(e.target.value))}
+          onClick={(e) => {
+            if (!clickedOnce.current) {
+              e.target.select();
+              clickedOnce.current = true;
+            }
+          }}
+          onBlur={() => {
+            clickedOnce.current = false; // reset on blur
+          }}
+          onChange={(e) => {
+            let value = e.target.value.replace(/^0+(?=\d)/, ""); // remove leading zeros
+            value = Number(value) < 1 ? "1" : value; // ensure minimum value is 1
+            setFontSize(Number(value));
+          }}
         />
       </div>
 

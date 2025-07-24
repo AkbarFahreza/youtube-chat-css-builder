@@ -1,10 +1,10 @@
-// ./_components/general-chats/viewer-chat.jsx
+// ./_components/general-chats/Moderator-chat.jsx
 "use client";
 
 import React, { useEffect } from "react";
 import Image from "next/image";
 
-function ViewerChat({
+function ModeratorChat({
   padding,
   flexDirection,
   authorNameStyle,
@@ -23,7 +23,6 @@ function ViewerChat({
 
   const nameFont = makeGoogleFontLink(authorNameStyle, "name");
   const msgFont = makeGoogleFontLink(authorMsgStyle, "msg");
-
   useEffect(() => {
     [nameFont, msgFont].forEach((font) => {
       if (!font) return;
@@ -36,7 +35,6 @@ function ViewerChat({
         document.head.appendChild(link);
       }
     });
-
     // (Optional) clean up if component unmounts
     return () => {
       [nameFont, msgFont].forEach((font) => {
@@ -57,7 +55,7 @@ function ViewerChat({
     }),
   };
   return (
-    <rz-chat-wrapper author-type="" className="items-center">
+    <rz-chat-wrapper author-type="moderator" className="items-center">
       <rz-author-photo id="author-photo">
         <Image
           src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1720782939/yt-profile-pict.png"
@@ -73,15 +71,15 @@ function ViewerChat({
             className="text-white/70"
             style={authorNameStyle}
           >
-            Asep Magelang
+            Moderator Name
           </div>
         </rz-name-wrapper>
         <span id="message" style={authorMsgStyle}>
-          Hallo aku viewer biasa
+          Hallo aku moderator
         </span>
       </rz-chat-content>
     </rz-chat-wrapper>
   );
 }
 
-export default ViewerChat;
+export default ModeratorChat;
