@@ -45,6 +45,9 @@ rz-chat-wrapper #author-photo {
 rz-chat-wrapper rz-name-wrapper {
   margin-right: 8px;
 }
+rz-chat-content {
+  width: 100%;
+}
 
 .scrollbar {
   scrollbar-width: thin;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo, useRef } from "react";
-import { AlignLeft, AlignCenter, AlignRight, X } from "lucide-react";
+import { AlignLeft, AlignCenter, AlignRight, X, Link2 } from "lucide-react";
 import { useGoogleFonts } from "@/app/stores/useGlobalFonts";
 import FontSelector from "./font-selector";
 import "@melloware/coloris/dist/coloris.css";
@@ -13,6 +13,8 @@ export default function FontEditor({
   value,
   onChange,
   onDelete,
+  setSync,
+  prefix,
 }) {
   const { fonts, isLoaded, setFonts } = useGoogleFonts();
   const inputRef = useRef(null);
@@ -23,7 +25,7 @@ export default function FontEditor({
   const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
   const [fontWeight, setFontWeight] = useState(value?.fontWeight || "400");
   const [fontSize, setFontSize] = useState(value?.fontSize || 16);
-  const [lineHeight, setLineHeight] = useState(value?.lineHeight || "normal");
+  const [lineHeight, setLineHeight] = useState(value?.lineHeight || "");
   const [textAlign, setTextAlign] = useState(value?.textAlign || "left");
 
   // Font Info
@@ -143,8 +145,22 @@ export default function FontEditor({
   return (
     <div className="py-5 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
       {/* Header */}
-      <div className="flex justify-between items-center pb-2 px-4">
-        <p className="text-white ">{label}</p>
+      <div className="flex justify-between items-center pb-2 px-4 z-50">
+        <div className="flex flex-row gap-2 items-center">
+          <p className="text-white">{label}</p>
+          {prefix !== "name" && prefix !== "msg" && (
+            <div className="group/sync relative cursor-pointer">
+              <Link2
+                className="group-hover/sync:text-purple-500"
+                size={16}
+                onClick={setSync}
+              />
+              <p className="group-hover/sync:flex hidden border border-white/30 py-1 px-2 bg-secondary rounded-sm absolute -bottom-11 left-1/2 -translate-1/2 text-nowrap">
+                Sync with Viewer
+              </p>
+            </div>
+          )}
+        </div>
         <X
           className="cursor-pointer text-red-500 opacity-0 group-hover:opacity-100 transition"
           size={17}
