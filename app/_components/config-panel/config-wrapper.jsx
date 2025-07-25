@@ -81,17 +81,17 @@ function Section({ title, collapsed, setCollapsed, children }) {
 function FontAndColorControls({
   role,
   type,
+  syncConfig,
   config,
   updateRoleConfig,
   prefix,
 }) {
-  console.log(prefix);
   const deleteFont = () => {
     [
       ["fontFamily", "Inter"],
       ["fontColor", "#ffffff"],
       ["fontWeight", "400"],
-      ["lineHeight", "normal"],
+      ["lineHeight", ""],
       ["textAlign", "left"],
       ["fontSize", 15],
     ].forEach(([key, val]) => updateRoleConfig(role, type, key, val));
@@ -103,12 +103,18 @@ function FontAndColorControls({
     );
   };
 
+  console.log;
+
   return (
     <>
       {config.active.includes(`${prefix}BgColor`) && (
         <ColorSelector
           label={formatLabel(`${prefix}Background Color`)}
           inputValue={config.bgColor}
+          prefix={prefix}
+          setSync={() => {
+            updateRoleConfig(role, type, "bgColor", syncConfig.bgColor);
+          }}
           onChange={(e) =>
             updateRoleConfig(role, type, "bgColor", e.target.value)
           }
@@ -128,6 +134,19 @@ function FontAndColorControls({
         <FontEditor
           label={formatLabel(`${prefix} Font`)}
           value={config}
+          setSync={() => {
+            const keys = [
+              "fontColor",
+              "fontFamily",
+              "fontSize",
+              "fontWeight",
+              "lineHeight",
+            ];
+            keys.forEach((key) => {
+              updateRoleConfig(role, type, key, syncConfig[key]);
+            });
+          }}
+          prefix={prefix}
           onChange={(val) => {
             Object.entries(val).forEach(([key, v]) =>
               updateRoleConfig(role, type, key, v)
@@ -141,6 +160,10 @@ function FontAndColorControls({
         <PaddingConfig
           label={formatLabel(`${prefix} Padding`)}
           padding={config.padding}
+          setSync={() => {
+            updateRoleConfig(role, type, "padding", syncConfig.padding);
+          }}
+          prefix={prefix}
           setPadding={(p) => updateRoleConfig(role, type, "padding", p)}
           onDelete={() => {
             updateRoleConfig(role, type, "padding", defaultPadding);
@@ -195,7 +218,6 @@ function GeneralControls({ generalConfig, updateGeneralConfig }) {
     </>
   );
 }
-
 function ChatConfigPanel({
   generalConfig,
   updateGeneralConfig,
@@ -205,57 +227,93 @@ function ChatConfigPanel({
   const [viewerCollapsed, setViewerCollapsed] = useState(false);
   const [modCollapsed, setModCollapsed] = useState(false);
 
+  const hasViewerConfig =
+    (generalConfig?.contentActive?.length ?? 0) > 0 ||
+    (roleConfigs.viewer?.name?.active?.length ?? 0) > 0 ||
+    (roleConfigs.viewer?.message?.active?.length ?? 0) > 0;
+
+  const hasModConfig =
+    (roleConfigs.moderator?.name?.active?.length ?? 0) > 0 ||
+    (roleConfigs.moderator?.message?.active?.length ?? 0) > 0;
+
   return (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar">
-      <Section
-        title="Viewer Chat Config"
-        collapsed={viewerCollapsed}
-        setCollapsed={setViewerCollapsed}
-      >
-        <GeneralControls
-          generalConfig={generalConfig}
-          updateGeneralConfig={updateGeneralConfig}
-        />
-        <FontAndColorControls
-          role="viewer"
-          type="name"
-          config={roleConfigs.viewer.name}
-          updateRoleConfig={updateRoleConfig}
-          prefix="name"
-        />
-        <FontAndColorControls
-          role="viewer"
-          type="message"
-          config={roleConfigs.viewer.message}
-          updateRoleConfig={updateRoleConfig}
-          prefix="msg"
-        />
-      </Section>
+      {hasViewerConfig && (
+        <Section
+          title="Viewer Chat Config"
+          collapsed={viewerCollapsed}
+          setCollapsed={setViewerCollapsed}
+        >
+          {generalConfig?.contentActive?.length > 0 && (
+            <GeneralControls
+              generalConfig={generalConfig}
+              updateGeneralConfig={updateGeneralConfig}
+            />
+          )}
+          {(roleConfigs.viewer?.name?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="viewer"
+              type="name"
+              config={roleConfigs.viewer.name}
+              updateRoleConfig={updateRoleConfig}
+              prefix="name"
+            />
+          )}
+          {(roleConfigs.viewer?.message?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="viewer"
+              type="message"
+              config={roleConfigs.viewer.message}
+              updateRoleConfig={updateRoleConfig}
+              prefix="msg"
+            />
+          )}
+        </Section>
+      )}
 
-      <Section
-        title="Moderator Chat Config"
-        collapsed={modCollapsed}
-        setCollapsed={setModCollapsed}
-      >
-        <GeneralControls
-          generalConfig={generalConfig}
-          updateGeneralConfig={updateGeneralConfig}
-        />
-        <FontAndColorControls
-          role="moderator"
-          type="name"
-          config={roleConfigs.moderator.name}
-          updateRoleConfig={updateRoleConfig}
-          prefix="modName"
-        />
-        <FontAndColorControls
-          role="moderator"
-          type="message"
-          config={roleConfigs.moderator.message}
-          updateRoleConfig={updateRoleConfig}
-          prefix="modMsg"
-        />
-      </Section>
+      {hasModConfig && (
+        <Section
+          title="Moderator Chat Config"
+          collapsed={modCollapsed}
+          setCollapsed={setModCollapsed}
+        >
+          {(roleConfigs.moderator?.name?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="moderator"
+              type="name"
+              syncConfig={roleConfigs.viewer.name}
+              config={roleConfigs.moderator.name}
+              updateRoleConfig={updateRoleConfig}
+              prefix="modName"
+            />
+          )}
+          {(roleConfigs.moderator?.message?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="moderator"
+              type="message"
+              syncConfig={roleConfigs.viewer.name}
+              config={roleConfigs.moderator.message}
+              updateRoleConfig={updateRoleConfig}
+              prefix="modMsg"
+            />
+          )}
+        </Section>
+      )}
+
+      {/* Show fallback if nothing is active */}
+      {!hasViewerConfig && !hasModConfig && (
+        <div className="px-5 flex flex-col justify-center items-center h-[90vh]">
+          <div className="text-white/40 mx-auto text-sm text-center py-4 leading-snug whitespace-pre">
+            {` ╱|、
+(˚ˎ 。7  
+         |、˜〵          
+  じしˍ,)ノ`}
+          </div>
+          <p className="text-white/40 mx-auto text-sm text-center">
+            No configs were added,, try to add from efft panel
+          </p>
+        </div>
+      )}
     </div>
   );
 }
