@@ -109,7 +109,7 @@ function FontAndColorControls({
     <>
       {config.active.includes(`${prefix}BgColor`) && (
         <ColorSelector
-          label={formatLabel(`${prefix}Background Color`)}
+          label={formatLabel(`${prefix}Background`)}
           inputValue={config.bgColor}
           prefix={prefix}
           setSync={() => {
@@ -164,7 +164,12 @@ function FontAndColorControls({
             updateRoleConfig(role, type, "padding", syncConfig.padding);
           }}
           prefix={prefix}
-          setPadding={(p) => updateRoleConfig(role, type, "padding", p)}
+          setPadding={(partialPadding) =>
+            updateRoleConfig(role, type, "padding", {
+              ...config.padding,
+              ...partialPadding,
+            })
+          }
           onDelete={() => {
             updateRoleConfig(role, type, "padding", defaultPadding);
             updateRoleConfig(
@@ -226,6 +231,7 @@ function ChatConfigPanel({
 }) {
   const [viewerCollapsed, setViewerCollapsed] = useState(false);
   const [modCollapsed, setModCollapsed] = useState(false);
+  const [memberCollapsed, setMemberCollapsed] = useState(false);
 
   const hasViewerConfig =
     (generalConfig?.contentActive?.length ?? 0) > 0 ||
@@ -235,6 +241,10 @@ function ChatConfigPanel({
   const hasModConfig =
     (roleConfigs.moderator?.name?.active?.length ?? 0) > 0 ||
     (roleConfigs.moderator?.message?.active?.length ?? 0) > 0;
+
+  const hasMemberConfig =
+    (roleConfigs.memmber?.name?.active?.length ?? 0) > 0 ||
+    (roleConfigs.memmber?.message?.active?.length ?? 0) > 0;
 
   return (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar">
@@ -291,7 +301,7 @@ function ChatConfigPanel({
             <FontAndColorControls
               role="moderator"
               type="message"
-              syncConfig={roleConfigs.viewer.name}
+              syncConfig={roleConfigs.viewer.message}
               config={roleConfigs.moderator.message}
               updateRoleConfig={updateRoleConfig}
               prefix="modMsg"
@@ -299,9 +309,37 @@ function ChatConfigPanel({
           )}
         </Section>
       )}
+      {hasModConfig && (
+        <Section
+          title="Member Chat Config"
+          collapsed={memberCollapsed}
+          setCollapsed={setMemberCollapsed}
+        >
+          {(roleConfigs.member?.name?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="member"
+              type="name"
+              syncConfig={roleConfigs.viewer.name}
+              config={roleConfigs.member.name}
+              updateRoleConfig={updateRoleConfig}
+              prefix="memberName"
+            />
+          )}
+          {(roleConfigs.member?.message?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="member"
+              type="message"
+              syncConfig={roleConfigs.viewer.message}
+              config={roleConfigs.member.message}
+              updateRoleConfig={updateRoleConfig}
+              prefix="memberMsg"
+            />
+          )}
+        </Section>
+      )}
 
       {/* Show fallback if nothing is active */}
-      {!hasViewerConfig && !hasModConfig && (
+      {!hasViewerConfig && !hasModConfig && !hasMemberConfig && (
         <div className="px-5 flex flex-col justify-center items-center h-[90vh]">
           <div className="text-white/40 mx-auto text-sm text-center py-4 leading-snug whitespace-pre">
             {` ╱|、
@@ -310,7 +348,7 @@ function ChatConfigPanel({
   じしˍ,)ノ`}
           </div>
           <p className="text-white/40 mx-auto text-sm text-center">
-            No configs were added,, try to add from efft panel
+            No configs were added, try to add from left panel
           </p>
         </div>
       )}

@@ -29,6 +29,10 @@ export default function useChatStyleConfig() {
       name: { ...defaultStyle, fontColor: "#4f7bff" },
       message: { ...defaultStyle },
     },
+    member: {
+      name: { ...defaultStyle, fontColor: "#2ba640" },
+      message: { ...defaultStyle },
+    },
   });
 
   const updateGeneralConfig = (key, value) => {
