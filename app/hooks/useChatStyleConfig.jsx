@@ -6,7 +6,7 @@ const defaultStyle = {
   fontFamily: "Inter",
   fontColor: "#ffffff",
   fontWeight: "400",
-  lineHeight: "normal",
+  lineHeight: "",
   textAlign: "left",
   bgColor: "#a819fe",
   fontSize: 15,
