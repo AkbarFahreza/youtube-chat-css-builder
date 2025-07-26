@@ -5,6 +5,7 @@ import ConfigSection from "./_components/element-tree/element-tree";
 import ConfigWrapper from "./_components/config-panel/config-wrapper";
 import useChatStyleConfig from "./hooks/useChatStyleConfig";
 import Link from "next/link";
+import MemberChat from "./_components/general-chats/member-chat";
 
 export default function Home() {
   const getStyle = (config, prefix) => ({
@@ -218,6 +219,60 @@ export default function Home() {
                 },
               ]}
             />
+            <ConfigSection
+              title="Member Chat"
+              options={[
+                { label: "Add Padding", value: "padding" },
+                { label: "Flex Direction", value: "flexDirection" },
+              ]}
+              activeOptions={generalConfig.contentActive}
+              onAddOption={(opt) => {
+                if (!generalConfig.contentActive.includes(opt)) {
+                  updateGeneralConfig("contentActive", [
+                    ...generalConfig.contentActive,
+                    opt,
+                  ]);
+                }
+              }}
+              subSections={[
+                {
+                  title: "Name",
+                  options: [
+                    { label: "Background Color", value: "memberNameBgColor" },
+                    { label: "Font Family", value: "memberNameFontFamily" },
+                    { label: "Padding", value: "memberNamePadding" },
+                  ],
+                  activeOptions: roleConfigs.member.name.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.member.name.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("member", "name", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+                {
+                  title: "Message",
+                  options: [
+                    { label: "Background Color", value: "memberMsgBgColor" },
+                    { label: "Font Family", value: "memberMsgFontFamily" },
+                    { label: "Padding", value: "memberMsgPadding" },
+                  ],
+                  activeOptions: roleConfigs.member.message.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.member.message.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("member", "message", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+              ]}
+            />
           </div>
           <div className="flex flex-col">
             <p className="text-[10px]">Developed By :</p>
@@ -249,6 +304,16 @@ export default function Home() {
             }
             authorNameStyle={getStyle(roleConfigs.moderator.name, "modName")}
             authorMsgStyle={getStyle(roleConfigs.moderator.message, "modMsg")}
+          />
+          <MemberChat
+            padding={generalConfig.padding}
+            flexDirection={
+              generalConfig.contentActive.includes("flexDirection")
+                ? generalConfig.flexDirection
+                : undefined
+            }
+            authorNameStyle={getStyle(roleConfigs.member.name, "memberName")}
+            authorMsgStyle={getStyle(roleConfigs.member.message, "memberMsg")}
           />
         </div>
         <ConfigWrapper

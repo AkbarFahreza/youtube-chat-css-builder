@@ -57,7 +57,7 @@ export default function ConfigSection({
               }`}
             />
           )}
-          <span>{title}</span>
+          <span className="text-nowrap">{title}</span>
         </div>
         <button
           ref={buttonRef}

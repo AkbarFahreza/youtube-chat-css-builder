@@ -20,7 +20,8 @@ export default function FontEditor({
   const inputRef = useRef(null);
   const prev = useRef({});
   const clickedOnce = useRef(false);
-  // States
+
+  // Local state for each field
   const [fontFamily, setFontFamily] = useState(value?.fontFamily || "Inter");
   const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
   const [fontWeight, setFontWeight] = useState(value?.fontWeight || "400");
@@ -28,7 +29,35 @@ export default function FontEditor({
   const [lineHeight, setLineHeight] = useState(value?.lineHeight || "");
   const [textAlign, setTextAlign] = useState(value?.textAlign || "left");
 
-  // Font Info
+  // ─── Sync local state only when `value` truly changes ───────────────────────
+  const prevValueRef = useRef({});
+  useEffect(() => {
+    if (!value) return;
+    const v = value;
+    const prevV = prevValueRef.current;
+
+    // check if any top-level prop changed
+    const changed = [
+      "fontFamily",
+      "fontColor",
+      "fontWeight",
+      "fontSize",
+      "lineHeight",
+      "textAlign",
+    ].some((key) => prevV[key] !== v[key]);
+
+    if (!changed) return;
+    prevValueRef.current = { ...v };
+
+    setFontFamily(v.fontFamily || "Inter");
+    setFontColor(v.fontColor || "#ffffff");
+    setFontWeight(v.fontWeight || "400");
+    setFontSize(v.fontSize || 16);
+    setLineHeight(v.lineHeight || "");
+    setTextAlign(v.textAlign || "left");
+  }, [value]);
+
+  // ─── Font info and loading ─────────────────────────────────────────────────
   const selectedFont = useMemo(
     () => fonts.find((f) => f.family === fontFamily),
     [fonts, fontFamily]
@@ -49,7 +78,6 @@ export default function FontEditor({
       })()
     : "";
 
-  // Load fonts once
   useEffect(() => {
     if (!isLoaded) {
       fetch("/api/fonts")
@@ -63,7 +91,6 @@ export default function FontEditor({
     }
   }, [isLoaded, setFonts, fontFamily]);
 
-  // Load selected font
   useEffect(() => {
     if (!selectedFont) return;
     const weights = selectedFont.variants.filter(
@@ -82,6 +109,7 @@ export default function FontEditor({
     }
   }, [selectedFont]);
 
+  // ─── Propagate user edits upward ────────────────────────────────────────────
   useEffect(() => {
     const current = {
       cssImport,
@@ -93,16 +121,12 @@ export default function FontEditor({
       textAlign,
       lineHeight,
     };
-
     const changed = Object.entries(current).some(
       ([key, val]) => prev.current[key] !== val
     );
-
     if (changed) {
-      prev.current = { ...current }; // clone to avoid shared ref
-      if (typeof onChange === "function") {
-        onChange(current);
-      }
+      prev.current = { ...current };
+      onChange?.(current);
     }
   }, [
     cssImport,
@@ -113,9 +137,10 @@ export default function FontEditor({
     fontSize,
     textAlign,
     lineHeight,
+    onChange,
   ]);
 
-  // Setup Coloris
+  // ─── Coloris setup ─────────────────────────────────────────────────────────
   useEffect(() => {
     import("@melloware/coloris").then((mod) => {
       Coloris = mod.default;
@@ -136,26 +161,35 @@ export default function FontEditor({
           lineHeight,
         });
       };
-
       el?.addEventListener("input", handleInput);
       return () => el?.removeEventListener("input", handleInput);
     });
-  }, [onChange]);
+  }, [
+    onChange,
+    cssImport,
+    fontFamilyCss,
+    fontFamily,
+    fontWeight,
+    fontSize,
+    textAlign,
+    lineHeight,
+  ]);
 
+  // ─── UI ─────────────────────────────────────────────────────────────────────
   return (
     <div className="py-5 border-b border-b-white/20 flex flex-col gap-3 group w-full h-full">
       {/* Header */}
       <div className="flex justify-between items-center pb-2 px-4 z-50">
         <div className="flex flex-row gap-2 items-center">
           <p className="text-white">{label}</p>
-          {prefix !== "name" && prefix !== "msg" && (
+          {prefix !== "name" && prefix !== "msg" && setSync && (
             <div className="group/sync relative cursor-pointer">
               <Link2
                 className="group-hover/sync:text-purple-500"
                 size={16}
                 onClick={setSync}
               />
-              <p className="group-hover/sync:flex hidden border border-white/30 py-1 px-2 bg-secondary rounded-sm absolute -bottom-11 left-1/2 -translate-1/2 text-nowrap">
+              <p className="group-hover/sync:flex hidden border border-white/30 py-1 px-2 bg-secondary rounded-sm absolute -bottom-11 left-1/2 -translate-x-1/2 text-nowrap">
                 Sync with Viewer
               </p>
             </div>
@@ -174,7 +208,7 @@ export default function FontEditor({
           selectedFont={selectedFont}
           fonts={fonts}
           fontFamily={fontFamily}
-          setFontFamily={setFontFamily}
+          setFontFamily={(v) => setFontFamily(v)}
         />
         <input
           ref={inputRef}
@@ -204,21 +238,19 @@ export default function FontEditor({
         <input
           type="number"
           min={1}
-          className="bg-secondary py-1 px-3 rounded w-1/2 "
+          className="bg-secondary py-1 px-3 rounded w-1/2"
           value={fontSize}
           onClick={(e) => {
             if (!clickedOnce.current) {
-              e.target.select();
+              e.currentTarget.select();
               clickedOnce.current = true;
             }
           }}
-          onBlur={() => {
-            clickedOnce.current = false; // reset on blur
-          }}
+          onBlur={() => (clickedOnce.current = false)}
           onChange={(e) => {
-            let value = e.target.value.replace(/^0+(?=\d)/, ""); // remove leading zeros
-            value = Number(value) < 1 ? "1" : value; // ensure minimum value is 1
-            setFontSize(Number(value));
+            let val = e.target.value.replace(/^0+(?=\d)/, "");
+            val = Number(val) < 1 ? "1" : val;
+            setFontSize(Number(val));
           }}
         />
       </div>
