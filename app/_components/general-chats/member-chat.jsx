@@ -6,7 +6,6 @@ import Image from "next/image";
 function MemberChat({
   padding,
   flexDirection,
-
   authorNameStyle,
   authorMsgStyle,
 }) {
@@ -66,12 +65,8 @@ function MemberChat({
         />
       </rz-author-photo>
       <rz-chat-content id="content" style={previewStyle}>
-        <rz-name-wrapper className="flex whitespace-nowrap shrink-0">
-          <div
-            id="author-name"
-            className="text-white/70"
-            style={authorNameStyle}
-          >
+        <rz-name-wrapper className="flex whitespace-nowrap shrink-0 items-center">
+          <div id="author-name" className="w-fit" style={authorNameStyle}>
             Member Name
           </div>
           <Image
@@ -79,6 +74,7 @@ function MemberChat({
             alt="Pelanggan (6 bulan)"
             width={16}
             height={16}
+            style={{ height: 15 }}
           />
         </rz-name-wrapper>
 

@@ -8,8 +8,8 @@ export default function CssOutput({ cssOutput }) {
     alert("CSS copied to clipboard!");
   };
   return (
-    <>
-      <div className="flex flex-row justify-between items-center py-2  ">
+    <div className="px-3">
+      <div className="flex flex-row justify-between items-center py-2 ">
         <h4 className="text-white font-semibold ">CSS Output:</h4>
         <button
           onClick={copyToClipboard}
@@ -19,6 +19,6 @@ export default function CssOutput({ cssOutput }) {
         </button>
       </div>
       <CodeBlock code={cssOutput.trim()} language="css" />
-    </>
+    </div>
   );
 }

@@ -3,8 +3,9 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
+import { UndoIcon } from "lucide-react";
 
-function ViewerChat({
+function OwnerChat({
   padding,
   flexDirection,
   authorNameStyle,
@@ -56,8 +57,9 @@ function ViewerChat({
       flexDirection,
     }),
   };
+  console.log("owner style", authorNameStyle);
   return (
-    <rz-chat-wrapper author-type="" className="items-center">
+    <rz-chat-wrapper author-type="owner" className="items-center">
       <rz-author-photo id="author-photo">
         <Image
           src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1720782939/yt-profile-pict.png"
@@ -70,18 +72,24 @@ function ViewerChat({
         <rz-name-wrapper>
           <div
             id="author-name"
-            className="text-white/70 w-fit"
-            style={authorNameStyle}
+            className="w-fit"
+            style={{
+              ...authorNameStyle,
+              padding: authorNameStyle?.padding || "2px 4px 2px 4px",
+              borderRadius: "2px",
+              //   color: authorNameStyle?.fontColor || "#000000",
+              backgroundColor: authorNameStyle?.backgroundColor || "#ffd600",
+            }}
           >
-            Asep Magelang
+            Dek Reza
           </div>
         </rz-name-wrapper>
         <span id="message" style={authorMsgStyle}>
-          Hallo aku viewer biasa
+          Owner message are here
         </span>
       </rz-chat-content>
     </rz-chat-wrapper>
   );
 }
 
-export default ViewerChat;
+export default OwnerChat;

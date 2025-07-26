@@ -87,9 +87,17 @@ function FontAndColorControls({
   prefix,
 }) {
   const deleteFont = () => {
+    const defaultColor =
+      role === "moderator"
+        ? "#4f7bff"
+        : role === "member"
+        ? "#2ba640"
+        : role === "owner"
+        ? "#000000"
+        : "#ffffff";
     [
       ["fontFamily", "Inter"],
-      ["fontColor", "#ffffff"],
+      ["fontColor", defaultColor],
       ["fontWeight", "400"],
       ["lineHeight", ""],
       ["textAlign", "left"],
@@ -119,7 +127,12 @@ function FontAndColorControls({
             updateRoleConfig(role, type, "bgColor", e.target.value)
           }
           onDelete={() => {
-            updateRoleConfig(role, type, "bgColor", "#a819fe");
+            updateRoleConfig(
+              role,
+              type,
+              "bgColor",
+              prefix === "owner" ? "#ffd600" : "#a819fe"
+            );
             updateRoleConfig(
               role,
               type,
@@ -232,6 +245,7 @@ function ChatConfigPanel({
   const [viewerCollapsed, setViewerCollapsed] = useState(false);
   const [modCollapsed, setModCollapsed] = useState(false);
   const [memberCollapsed, setMemberCollapsed] = useState(false);
+  const [ownerCollapsed, setOwnerCollapsed] = useState(false);
 
   const hasViewerConfig =
     (generalConfig?.contentActive?.length ?? 0) > 0 ||
@@ -243,8 +257,12 @@ function ChatConfigPanel({
     (roleConfigs.moderator?.message?.active?.length ?? 0) > 0;
 
   const hasMemberConfig =
-    (roleConfigs.memmber?.name?.active?.length ?? 0) > 0 ||
-    (roleConfigs.memmber?.message?.active?.length ?? 0) > 0;
+    (roleConfigs.member?.name?.active?.length ?? 0) > 0 ||
+    (roleConfigs.member?.message?.active?.length ?? 0) > 0;
+
+  const hasOwnerConfig =
+    (roleConfigs.owner?.name?.active?.length ?? 0) > 0 ||
+    (roleConfigs.owner?.message?.active?.length ?? 0) > 0;
 
   return (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar">
@@ -309,7 +327,7 @@ function ChatConfigPanel({
           )}
         </Section>
       )}
-      {hasModConfig && (
+      {hasMemberConfig && (
         <Section
           title="Member Chat Config"
           collapsed={memberCollapsed}
@@ -333,6 +351,34 @@ function ChatConfigPanel({
               config={roleConfigs.member.message}
               updateRoleConfig={updateRoleConfig}
               prefix="memberMsg"
+            />
+          )}
+        </Section>
+      )}
+      {hasOwnerConfig && (
+        <Section
+          title="Owner Chat Config"
+          collapsed={ownerCollapsed}
+          setCollapsed={setOwnerCollapsed}
+        >
+          {(roleConfigs.owner?.name?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="owner"
+              type="name"
+              syncConfig={roleConfigs.viewer.name}
+              config={roleConfigs.owner.name}
+              updateRoleConfig={updateRoleConfig}
+              prefix="ownerName"
+            />
+          )}
+          {(roleConfigs.owner?.message?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="owner"
+              type="message"
+              syncConfig={roleConfigs.viewer.message}
+              config={roleConfigs.owner.message}
+              updateRoleConfig={updateRoleConfig}
+              prefix="ownerMsg"
             />
           )}
         </Section>

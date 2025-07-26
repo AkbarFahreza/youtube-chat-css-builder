@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import ViewerChat from "./_components/general-chats/viewer-chat";
 import ModeratorChat from "./_components/general-chats/moderator-chat";
 import ConfigSection from "./_components/element-tree/element-tree";
@@ -6,11 +7,14 @@ import ConfigWrapper from "./_components/config-panel/config-wrapper";
 import useChatStyleConfig from "./hooks/useChatStyleConfig";
 import Link from "next/link";
 import MemberChat from "./_components/general-chats/member-chat";
+import OwnerChat from "./_components/general-chats/owner-chat";
 
 export default function Home() {
   const getStyle = (config, prefix) => ({
     backgroundColor: config.active.includes(`${prefix}BgColor`)
       ? config.bgColor
+      : prefix === "owner"
+      ? "#ffd600"
       : undefined,
     fontSize: config.fontSize,
     fontWeight: config.fontWeight,
@@ -273,6 +277,60 @@ export default function Home() {
                 },
               ]}
             />
+            <ConfigSection
+              title="Owner Chat"
+              options={[
+                { label: "Add Padding", value: "padding" },
+                { label: "Flex Direction", value: "flexDirection" },
+              ]}
+              activeOptions={generalConfig.contentActive}
+              onAddOption={(opt) => {
+                if (!generalConfig.contentActive.includes(opt)) {
+                  updateGeneralConfig("contentActive", [
+                    ...generalConfig.contentActive,
+                    opt,
+                  ]);
+                }
+              }}
+              subSections={[
+                {
+                  title: "Name",
+                  options: [
+                    { label: "Background Color", value: "ownerNameBgColor" },
+                    { label: "Font Family", value: "ownerNameFontFamily" },
+                    { label: "Padding", value: "ownerNamePadding" },
+                  ],
+                  activeOptions: roleConfigs.owner.name.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.owner.name.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("owner", "name", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+                {
+                  title: "Message",
+                  options: [
+                    { label: "Background Color", value: "ownerMsgBgColor" },
+                    { label: "Font Family", value: "ownerMsgFontFamily" },
+                    { label: "Padding", value: "ownerMsgPadding" },
+                  ],
+                  activeOptions: roleConfigs.owner.message.active,
+                  onAddOption: (opt) => {
+                    const current = roleConfigs.owner.message.active;
+                    if (!current.includes(opt)) {
+                      updateRoleConfig("owner", "message", "active", [
+                        ...current,
+                        opt,
+                      ]);
+                    }
+                  },
+                },
+              ]}
+            />
           </div>
           <div className="flex flex-col">
             <p className="text-[10px]">Developed By :</p>
@@ -314,6 +372,16 @@ export default function Home() {
             }
             authorNameStyle={getStyle(roleConfigs.member.name, "memberName")}
             authorMsgStyle={getStyle(roleConfigs.member.message, "memberMsg")}
+          />
+          <OwnerChat
+            padding={generalConfig.padding}
+            flexDirection={
+              generalConfig.contentActive.includes("flexDirection")
+                ? generalConfig.flexDirection
+                : undefined
+            }
+            authorNameStyle={getStyle(roleConfigs.owner.name, "ownerName")}
+            authorMsgStyle={getStyle(roleConfigs.owner.message, "ownerMsg")}
           />
         </div>
         <ConfigWrapper
