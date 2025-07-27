@@ -266,18 +266,18 @@ function ChatConfigPanel({
 
   return (
     <div className="max-h-[90vh] overflow-y-scroll scrollbar">
+      {generalConfig?.contentActive?.length > 0 && (
+        <GeneralControls
+          generalConfig={generalConfig}
+          updateGeneralConfig={updateGeneralConfig}
+        />
+      )}
       {hasViewerConfig && (
         <Section
           title="Viewer Chat Config"
           collapsed={viewerCollapsed}
           setCollapsed={setViewerCollapsed}
         >
-          {generalConfig?.contentActive?.length > 0 && (
-            <GeneralControls
-              generalConfig={generalConfig}
-              updateGeneralConfig={updateGeneralConfig}
-            />
-          )}
           {(roleConfigs.viewer?.name?.active?.length ?? 0) > 0 && (
             <FontAndColorControls
               role="viewer"
