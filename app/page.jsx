@@ -120,14 +120,36 @@ export default function Home() {
               options={[
                 { label: "Add Padding", value: "padding" },
                 { label: "Flex Direction", value: "flexDirection" },
+                { label: "Avatar", value: "avatar" }, // ← new!
+                { label: "Content Margin", value: "margin" }, // ← new!
               ]}
-              activeOptions={generalConfig.contentActive}
+              activeOptions={[
+                ...generalConfig.contentActive,
+                ...(roleConfigs.viewer.content.active.includes("avatar")
+                  ? ["avatar"]
+                  : []),
+                ...(roleConfigs.viewer.content.active.includes("margin")
+                  ? ["margin"]
+                  : []),
+              ]}
               onAddOption={(opt) => {
-                if (!generalConfig.contentActive.includes(opt)) {
-                  updateGeneralConfig("contentActive", [
-                    ...generalConfig.contentActive,
-                    opt,
-                  ]);
+                if (opt === "padding" || opt === "flexDirection") {
+                  // still global
+                  if (!generalConfig.contentActive.includes(opt)) {
+                    updateGeneralConfig("contentActive", [
+                      ...generalConfig.contentActive,
+                      opt,
+                    ]);
+                  }
+                } else {
+                  // per-role: avatar or margin
+                  const curr = roleConfigs.viewer.content.active;
+                  if (!curr.includes(opt)) {
+                    updateRoleConfig("viewer", "content", "active", [
+                      ...curr,
+                      opt,
+                    ]);
+                  }
                 }
               }}
               subSections={[
@@ -174,14 +196,36 @@ export default function Home() {
               options={[
                 { label: "Add Padding", value: "padding" },
                 { label: "Flex Direction", value: "flexDirection" },
+                { label: "Avatar", value: "avatar" }, // ← new!
+                { label: "Content Margin", value: "margin" }, // ← new!
               ]}
-              activeOptions={generalConfig.contentActive}
+              activeOptions={[
+                ...generalConfig.contentActive,
+                ...(roleConfigs.moderator.content.active.includes("avatar")
+                  ? ["avatar"]
+                  : []),
+                ...(roleConfigs.moderator.content.active.includes("margin")
+                  ? ["margin"]
+                  : []),
+              ]}
               onAddOption={(opt) => {
-                if (!generalConfig.contentActive.includes(opt)) {
-                  updateGeneralConfig("contentActive", [
-                    ...generalConfig.contentActive,
-                    opt,
-                  ]);
+                if (opt === "padding" || opt === "flexDirection") {
+                  // still global
+                  if (!generalConfig.contentActive.includes(opt)) {
+                    updateGeneralConfig("contentActive", [
+                      ...generalConfig.contentActive,
+                      opt,
+                    ]);
+                  }
+                } else {
+                  // per-role: avatar or margin
+                  const curr = roleConfigs.moderator.content.active;
+                  if (!curr.includes(opt)) {
+                    updateRoleConfig("moderator", "content", "active", [
+                      ...curr,
+                      opt,
+                    ]);
+                  }
                 }
               }}
               subSections={[
@@ -228,14 +272,36 @@ export default function Home() {
               options={[
                 { label: "Add Padding", value: "padding" },
                 { label: "Flex Direction", value: "flexDirection" },
+                { label: "Avatar", value: "avatar" }, // ← new!
+                { label: "Content Margin", value: "margin" }, // ← new!
               ]}
-              activeOptions={generalConfig.contentActive}
+              activeOptions={[
+                ...generalConfig.contentActive,
+                ...(roleConfigs.member.content.active.includes("avatar")
+                  ? ["avatar"]
+                  : []),
+                ...(roleConfigs.member.content.active.includes("margin")
+                  ? ["margin"]
+                  : []),
+              ]}
               onAddOption={(opt) => {
-                if (!generalConfig.contentActive.includes(opt)) {
-                  updateGeneralConfig("contentActive", [
-                    ...generalConfig.contentActive,
-                    opt,
-                  ]);
+                if (opt === "padding" || opt === "flexDirection") {
+                  // still global
+                  if (!generalConfig.contentActive.includes(opt)) {
+                    updateGeneralConfig("contentActive", [
+                      ...generalConfig.contentActive,
+                      opt,
+                    ]);
+                  }
+                } else {
+                  // per-role: avatar or margin
+                  const curr = roleConfigs.member.content.active;
+                  if (!curr.includes(opt)) {
+                    updateRoleConfig("member", "content", "active", [
+                      ...curr,
+                      opt,
+                    ]);
+                  }
                 }
               }}
               subSections={[
@@ -282,14 +348,36 @@ export default function Home() {
               options={[
                 { label: "Add Padding", value: "padding" },
                 { label: "Flex Direction", value: "flexDirection" },
+                { label: "Avatar", value: "avatar" }, // ← new!
+                { label: "Content Margin", value: "margin" }, // ← new!
               ]}
-              activeOptions={generalConfig.contentActive}
+              activeOptions={[
+                ...generalConfig.contentActive,
+                ...(roleConfigs.member.content.active.includes("avatar")
+                  ? ["avatar"]
+                  : []),
+                ...(roleConfigs.member.content.active.includes("margin")
+                  ? ["margin"]
+                  : []),
+              ]}
               onAddOption={(opt) => {
-                if (!generalConfig.contentActive.includes(opt)) {
-                  updateGeneralConfig("contentActive", [
-                    ...generalConfig.contentActive,
-                    opt,
-                  ]);
+                if (opt === "padding" || opt === "flexDirection") {
+                  // still global
+                  if (!generalConfig.contentActive.includes(opt)) {
+                    updateGeneralConfig("contentActive", [
+                      ...generalConfig.contentActive,
+                      opt,
+                    ]);
+                  }
+                } else {
+                  // per-role: avatar or margin
+                  const curr = roleConfigs.member.content.active;
+                  if (!curr.includes(opt)) {
+                    updateRoleConfig("member", "content", "active", [
+                      ...curr,
+                      opt,
+                    ]);
+                  }
                 }
               }}
               subSections={[
