@@ -5,12 +5,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { UndoIcon } from "lucide-react";
 
-function OwnerChat({
-  padding,
-  flexDirection,
-  authorNameStyle,
-  authorMsgStyle,
-}) {
+function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   const makeGoogleFontLink = (style, id) => {
     if (!style?.fontFamily) return null;
     const family = style.fontFamily.replace(/['"]/g, "").split(",")[0].trim();
@@ -49,18 +44,24 @@ function OwnerChat({
     };
   }, [nameFont?.href, msgFont?.href]); // re-run when hrefs change
 
-  const previewStyle = {
-    padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
-    transition: "padding 0.2s",
-    ...(flexDirection && {
-      display: "flex",
-      flexDirection,
-    }),
-  };
-  console.log("owner style", authorNameStyle);
+  // Select where style to apply
+  const filteredContentStyle = ["padding", "flexDirection"];
+  const filteredAvatarStyle = ["display"];
+
+  const CntStyle = Object.fromEntries(
+    Object.entries(contentStyle).filter(([key]) =>
+      filteredContentStyle.includes(key)
+    )
+  );
+  const AvatarStyle = Object.fromEntries(
+    Object.entries(contentStyle).filter(([key]) =>
+      filteredAvatarStyle.includes(key)
+    )
+  );
+
   return (
     <rz-chat-wrapper author-type="owner" className="items-center">
-      <rz-author-photo id="author-photo">
+      <rz-author-photo id="author-photo" style={AvatarStyle}>
         <Image
           src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1720782939/yt-profile-pict.png"
           alt="user"
@@ -68,7 +69,7 @@ function OwnerChat({
           height={24}
         />
       </rz-author-photo>
-      <rz-chat-content id="content" style={previewStyle}>
+      <rz-chat-content id="content" style={CntStyle}>
         <rz-name-wrapper>
           <div
             id="author-name"
