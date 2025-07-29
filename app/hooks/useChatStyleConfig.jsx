@@ -14,16 +14,13 @@ const defaultStyle = {
 };
 const defaultContentStyle = {
   active: [],
+  contentPadding: { top: 2, right: 2, bottom: 2, left: 2 },
+  contentMargin: { top: 2, right: 2, bottom: 2, left: 2 },
   avatar: "block",
-  margin: { top: 2, right: 2, bottom: 2, left: 2 },
+  flexDirection: "row",
+  contentBgColor: "#a819fe",
 };
 export default function useChatStyleConfig() {
-  const [generalConfig, setGeneralConfig] = useState({
-    contentActive: [],
-    padding: { top: 2, right: 2, bottom: 2, left: 2 },
-    flexDirection: "row",
-  });
-
   const [roleConfigs, setRoleConfigs] = useState({
     viewer: {
       content: { ...defaultContentStyle },
@@ -47,10 +44,6 @@ export default function useChatStyleConfig() {
     },
   });
 
-  const updateGeneralConfig = (key, value) => {
-    setGeneralConfig((prev) => ({ ...prev, [key]: value }));
-  };
-
   const updateRoleConfig = (role, type, key, value) => {
     setRoleConfigs((prev) => ({
       ...prev,
@@ -65,8 +58,6 @@ export default function useChatStyleConfig() {
   };
 
   return {
-    generalConfig,
-    updateGeneralConfig,
     roleConfigs,
     updateRoleConfig,
   };

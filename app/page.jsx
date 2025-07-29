@@ -26,9 +26,24 @@ export default function Home() {
       ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
       : undefined,
   });
+  const getContentStyle = (config, prefix) => {
+    // const active = config.active || [];
 
-  const { generalConfig, updateGeneralConfig, roleConfigs, updateRoleConfig } =
-    useChatStyleConfig();
+    return {
+      padding: config.active.includes(`${prefix}Padding`)
+        ? `${config.contentPadding.top}px ${config.contentPadding.right}px ${config.contentPadding.bottom}px ${config.contentPadding.left}px`
+        : undefined,
+
+      backgroundColor: config.active.includes(`${prefix}BgColor`)
+        ? config.contentBgColor
+        : undefined,
+
+      display: config.avatar || "block",
+      flexDirection: config.flexDirection || "row",
+    };
+  };
+
+  const { roleConfigs, updateRoleConfig } = useChatStyleConfig();
 
   // Compose CSS output for all active configs
   let cssOutput = "";
@@ -40,20 +55,6 @@ export default function Home() {
   // =============================
   // Viewer config
   // =============================
-  if (
-    generalConfig.contentActive.includes("padding") ||
-    generalConfig.contentActive.includes("flexDirection")
-  ) {
-    cssOutput += `yt-live-chat-message-renderer #content {\n`;
-    if (generalConfig.contentActive.includes("padding")) {
-      const p = generalConfig.padding;
-      cssOutput += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px;\n`;
-    }
-    if (generalConfig.contentActive.includes("flexDirection")) {
-      cssOutput += `  display: flex;\n  flex-direction: ${generalConfig.flexDirection};\n`;
-    }
-    cssOutput += `}\n\n`;
-  }
 
   //============= Viewer Name config =============
   if (
@@ -118,38 +119,19 @@ export default function Home() {
             <ConfigSection
               title="Viewer Chat"
               options={[
-                { label: "Add Padding", value: "padding" },
-                { label: "Flex Direction", value: "flexDirection" },
-                { label: "Avatar", value: "avatar" }, // ← new!
-                { label: "Content Margin", value: "margin" }, // ← new!
+                { label: "Add Padding", value: "contentPadding" },
+                { label: "Flex Direction", value: "contentFlexDirection" },
+                { label: "Avatar", value: "contentAvatar" },
+                { label: "Content Margin", value: "contentMargin" },
               ]}
-              activeOptions={[
-                ...generalConfig.contentActive,
-                ...(roleConfigs.viewer.content.active.includes("avatar")
-                  ? ["avatar"]
-                  : []),
-                ...(roleConfigs.viewer.content.active.includes("margin")
-                  ? ["margin"]
-                  : []),
-              ]}
+              activeOptions={roleConfigs.viewer.content.active}
               onAddOption={(opt) => {
-                if (opt === "padding" || opt === "flexDirection") {
-                  // still global
-                  if (!generalConfig.contentActive.includes(opt)) {
-                    updateGeneralConfig("contentActive", [
-                      ...generalConfig.contentActive,
-                      opt,
-                    ]);
-                  }
-                } else {
-                  // per-role: avatar or margin
-                  const curr = roleConfigs.viewer.content.active;
-                  if (!curr.includes(opt)) {
-                    updateRoleConfig("viewer", "content", "active", [
-                      ...curr,
-                      opt,
-                    ]);
-                  }
+                const current = roleConfigs.viewer.content.active;
+                if (!current.includes(opt)) {
+                  updateRoleConfig("viewer", "content", "active", [
+                    ...current,
+                    opt,
+                  ]);
                 }
               }}
               subSections={[
@@ -194,38 +176,19 @@ export default function Home() {
             <ConfigSection
               title="Moderator Chat"
               options={[
-                { label: "Add Padding", value: "padding" },
-                { label: "Flex Direction", value: "flexDirection" },
-                { label: "Avatar", value: "avatar" }, // ← new!
-                { label: "Content Margin", value: "margin" }, // ← new!
+                { label: "Add Padding", value: "modContentPadding" },
+                { label: "Flex Direction", value: "modContentFlexDirection" },
+                { label: "Avatar", value: "modContentAvatar" },
+                { label: "Content Margin", value: "modContentMargin" },
               ]}
-              activeOptions={[
-                ...generalConfig.contentActive,
-                ...(roleConfigs.moderator.content.active.includes("avatar")
-                  ? ["avatar"]
-                  : []),
-                ...(roleConfigs.moderator.content.active.includes("margin")
-                  ? ["margin"]
-                  : []),
-              ]}
+              activeOptions={roleConfigs.moderator.content.active}
               onAddOption={(opt) => {
-                if (opt === "padding" || opt === "flexDirection") {
-                  // still global
-                  if (!generalConfig.contentActive.includes(opt)) {
-                    updateGeneralConfig("contentActive", [
-                      ...generalConfig.contentActive,
-                      opt,
-                    ]);
-                  }
-                } else {
-                  // per-role: avatar or margin
-                  const curr = roleConfigs.moderator.content.active;
-                  if (!curr.includes(opt)) {
-                    updateRoleConfig("moderator", "content", "active", [
-                      ...curr,
-                      opt,
-                    ]);
-                  }
+                const current = roleConfigs.moderator.content.active;
+                if (!current.includes(opt)) {
+                  updateRoleConfig("moderator", "content", "active", [
+                    ...current,
+                    opt,
+                  ]);
                 }
               }}
               subSections={[
@@ -270,38 +233,24 @@ export default function Home() {
             <ConfigSection
               title="Member Chat"
               options={[
-                { label: "Add Padding", value: "padding" },
-                { label: "Flex Direction", value: "flexDirection" },
-                { label: "Avatar", value: "avatar" }, // ← new!
-                { label: "Content Margin", value: "margin" }, // ← new!
+                { label: "Add Padding", value: "memberContentPadding" },
+                {
+                  label: "Flex Direction",
+                  value: "memberContentFlexDirection",
+                },
+                { label: "Avatar", value: "memberContentAvatar" },
+                { label: "Content Margin", value: "memberContentMargin" },
               ]}
-              activeOptions={[
-                ...generalConfig.contentActive,
-                ...(roleConfigs.member.content.active.includes("avatar")
-                  ? ["avatar"]
-                  : []),
-                ...(roleConfigs.member.content.active.includes("margin")
-                  ? ["margin"]
-                  : []),
-              ]}
+              activeOptions={roleConfigs.member.content.active}
               onAddOption={(opt) => {
-                if (opt === "padding" || opt === "flexDirection") {
-                  // still global
-                  if (!generalConfig.contentActive.includes(opt)) {
-                    updateGeneralConfig("contentActive", [
-                      ...generalConfig.contentActive,
-                      opt,
-                    ]);
-                  }
-                } else {
-                  // per-role: avatar or margin
-                  const curr = roleConfigs.member.content.active;
-                  if (!curr.includes(opt)) {
-                    updateRoleConfig("member", "content", "active", [
-                      ...curr,
-                      opt,
-                    ]);
-                  }
+                console.log("member", roleConfigs.member.content.active);
+
+                const current = roleConfigs.member.content.active;
+                if (!current.includes(opt)) {
+                  updateRoleConfig("member", "content", "active", [
+                    ...current,
+                    opt,
+                  ]);
                 }
               }}
               subSections={[
@@ -346,38 +295,21 @@ export default function Home() {
             <ConfigSection
               title="Owner Chat"
               options={[
-                { label: "Add Padding", value: "padding" },
-                { label: "Flex Direction", value: "flexDirection" },
-                { label: "Avatar", value: "avatar" }, // ← new!
-                { label: "Content Margin", value: "margin" }, // ← new!
+                { label: "Add Padding", value: "ownerContentPadding" },
+                { label: "Flex Direction", value: "ownerContentFlexDirection" },
+                { label: "Avatar", value: "ownerContentAvatar" },
+                { label: "Content Margin", value: "ownerContentMargin" },
               ]}
-              activeOptions={[
-                ...generalConfig.contentActive,
-                ...(roleConfigs.member.content.active.includes("avatar")
-                  ? ["avatar"]
-                  : []),
-                ...(roleConfigs.member.content.active.includes("margin")
-                  ? ["margin"]
-                  : []),
-              ]}
+              activeOptions={roleConfigs.owner.content.active}
               onAddOption={(opt) => {
-                if (opt === "padding" || opt === "flexDirection") {
-                  // still global
-                  if (!generalConfig.contentActive.includes(opt)) {
-                    updateGeneralConfig("contentActive", [
-                      ...generalConfig.contentActive,
-                      opt,
-                    ]);
-                  }
-                } else {
-                  // per-role: avatar or margin
-                  const curr = roleConfigs.member.content.active;
-                  if (!curr.includes(opt)) {
-                    updateRoleConfig("member", "content", "active", [
-                      ...curr,
-                      opt,
-                    ]);
-                  }
+                console.log("owner", roleConfigs.owner.content.active);
+                const current = roleConfigs.owner.content.active;
+                if (!current.includes(opt)) {
+                  updateRoleConfig("owner", "content", "active", [
+                    ...current,
+
+                    opt,
+                  ]);
                 }
               }}
               subSections={[
@@ -430,51 +362,43 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col p-4 h-full gap-4 justify-center mx-auto">
-          <ViewerChat
-            padding={generalConfig.padding}
-            flexDirection={
-              generalConfig.contentActive.includes("flexDirection")
-                ? generalConfig.flexDirection
-                : undefined
-            }
-            authorNameStyle={getStyle(roleConfigs.viewer.name, "name")}
-            authorMsgStyle={getStyle(roleConfigs.viewer.message, "msg")}
-          />
-          <ModeratorChat
-            padding={generalConfig.padding}
-            flexDirection={
-              generalConfig.contentActive.includes("flexDirection")
-                ? generalConfig.flexDirection
-                : undefined
-            }
-            authorNameStyle={getStyle(roleConfigs.moderator.name, "modName")}
-            authorMsgStyle={getStyle(roleConfigs.moderator.message, "modMsg")}
-          />
-          <MemberChat
-            padding={generalConfig.padding}
-            flexDirection={
-              generalConfig.contentActive.includes("flexDirection")
-                ? generalConfig.flexDirection
-                : undefined
-            }
-            authorNameStyle={getStyle(roleConfigs.member.name, "memberName")}
-            authorMsgStyle={getStyle(roleConfigs.member.message, "memberMsg")}
-          />
-          <OwnerChat
-            padding={generalConfig.padding}
-            flexDirection={
-              generalConfig.contentActive.includes("flexDirection")
-                ? generalConfig.flexDirection
-                : undefined
-            }
-            authorNameStyle={getStyle(roleConfigs.owner.name, "ownerName")}
-            authorMsgStyle={getStyle(roleConfigs.owner.message, "ownerMsg")}
-          />
+        <div className="flex flex-col justify-center">
+          <div className="flex flex-col p-4 h-full gap-4 justify-center px-10">
+            <ViewerChat
+              contentStyle={getContentStyle(
+                roleConfigs.viewer.content,
+                "content"
+              )}
+              authorNameStyle={getStyle(roleConfigs.viewer.name, "name")}
+              authorMsgStyle={getStyle(roleConfigs.viewer.message, "msg")}
+            />
+            <ModeratorChat
+              contentStyle={getContentStyle(
+                roleConfigs.moderator.content,
+                "modContent"
+              )}
+              authorNameStyle={getStyle(roleConfigs.moderator.name, "modName")}
+              authorMsgStyle={getStyle(roleConfigs.moderator.message, "modMsg")}
+            />
+            <MemberChat
+              contentStyle={getContentStyle(
+                roleConfigs.member.content,
+                "memberContent"
+              )}
+              authorNameStyle={getStyle(roleConfigs.member.name, "memberName")}
+              authorMsgStyle={getStyle(roleConfigs.member.message, "memberMsg")}
+            />
+            <OwnerChat
+              contentStyle={getContentStyle(
+                roleConfigs.owner.content,
+                "ownerContent"
+              )}
+              authorNameStyle={getStyle(roleConfigs.owner.name, "ownerName")}
+              authorMsgStyle={getStyle(roleConfigs.owner.message, "ownerMsg")}
+            />
+          </div>
         </div>
         <ConfigWrapper
-          generalConfig={generalConfig}
-          updateGeneralConfig={updateGeneralConfig}
           roleConfigs={roleConfigs}
           updateRoleConfig={updateRoleConfig}
           cssOutput={cssOutput}

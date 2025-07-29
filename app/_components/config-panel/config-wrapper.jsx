@@ -7,18 +7,11 @@ import FontEditor from "./config-editor/font-config";
 import { BooleanSelector } from "./config-editor/boolean-selector";
 import CssOutput from "./css-output";
 
-const defaultPadding = { top: 2, right: 2, bottom: 2, left: 2 };
-const FlexDirOpts = [
-  { label: "row", value: "row" },
-  { label: "column", value: "column" },
-];
 function formatLabel(text) {
   const withSpaces = text.replace(/([A-Z])/g, " $1").trim();
   return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 }
 export default function ConfigWrapper({
-  generalConfig,
-  updateGeneralConfig,
   roleConfigs,
   updateRoleConfig,
   cssOutput,
@@ -46,8 +39,6 @@ export default function ConfigWrapper({
 
       {mode === "design" ? (
         <ChatConfigPanel
-          generalConfig={generalConfig}
-          updateGeneralConfig={updateGeneralConfig}
           roleConfigs={roleConfigs}
           updateRoleConfig={updateRoleConfig}
         />
@@ -110,11 +101,64 @@ function FontAndColorControls({
       config.active.filter((o) => o !== `${prefix}FontFamily`)
     );
   };
-
-  console.log;
-
+  const FlexDirOpts = [
+    { label: "Row", value: "row" },
+    { label: "Column", value: "column" },
+  ];
+  const avatarDisplayOpts = [
+    { label: "Show", value: "block" },
+    { label: "Hide", value: "none" },
+  ];
   return (
     <>
+      {config.active.includes(`${prefix}FlexDirection`) && (
+        <BooleanSelector
+          label={formatLabel(`${prefix}Flex Direction`)}
+          opts={FlexDirOpts}
+          value={config.flexDirection}
+          prefix={prefix}
+          setSync={() => {
+            updateRoleConfig(
+              role,
+              type,
+              "flexDirection",
+              syncConfig.flexDirection
+            );
+          }}
+          setValue={(v) => updateRoleConfig(role, type, "flexDirection", v)}
+          onDelete={() => {
+            updateRoleConfig(role, type, "flexDirection", "row");
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((o) => o !== `${prefix}FlexDirection`)
+            );
+          }}
+        />
+      )}
+      {config.active.includes(`${prefix}Avatar`) && (
+        <BooleanSelector
+          label={formatLabel(`${prefix}Avatar`)}
+          opts={avatarDisplayOpts}
+          value={config.avatar}
+          prefix={prefix}
+          setSync={() => {
+            updateRoleConfig(role, type, "avatar", syncConfig.avatar);
+          }}
+          setValue={(v) => updateRoleConfig(role, type, "avatar", v)}
+          onDelete={() => {
+            updateRoleConfig(role, type, "avatar", "block");
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((o) => o !== `${prefix}Avatar`)
+            );
+          }}
+        />
+      )}
+
       {config.active.includes(`${prefix}BgColor`) && (
         <ColorSelector
           label={formatLabel(`${prefix}Background`)}
@@ -198,69 +242,29 @@ function FontAndColorControls({
   );
 }
 
-function GeneralControls({ generalConfig, updateGeneralConfig }) {
-  return (
-    <>
-      {generalConfig.contentActive.includes("padding") && (
-        <PaddingConfig
-          label="Content Padding"
-          padding={generalConfig.padding}
-          setPadding={(p) => updateGeneralConfig("padding", p)}
-          onDelete={() => {
-            updateGeneralConfig("padding", defaultPadding);
-            updateGeneralConfig(
-              "contentActive",
-              generalConfig.contentActive.filter((opt) => opt !== "padding")
-            );
-          }}
-        />
-      )}
-
-      {generalConfig.contentActive.includes("flexDirection") && (
-        <BooleanSelector
-          label="Content Flex Direction"
-          opts={FlexDirOpts}
-          value={generalConfig.flexDirection}
-          setValue={(v) => updateGeneralConfig("flexDirection", v)}
-          onDelete={() => {
-            updateGeneralConfig("flexDirection", "row");
-            updateGeneralConfig(
-              "contentActive",
-              generalConfig.contentActive.filter(
-                (opt) => opt !== "flexDirection"
-              )
-            );
-          }}
-        />
-      )}
-    </>
-  );
-}
-function ChatConfigPanel({
-  generalConfig,
-  updateGeneralConfig,
-  roleConfigs,
-  updateRoleConfig,
-}) {
+function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
   const [viewerCollapsed, setViewerCollapsed] = useState(false);
   const [modCollapsed, setModCollapsed] = useState(false);
   const [memberCollapsed, setMemberCollapsed] = useState(false);
   const [ownerCollapsed, setOwnerCollapsed] = useState(false);
 
   const hasViewerConfig =
-    (generalConfig?.contentActive?.length ?? 0) > 0 ||
+    (roleConfigs.viewer?.content?.active?.length ?? 0) > 0 ||
     (roleConfigs.viewer?.name?.active?.length ?? 0) > 0 ||
     (roleConfigs.viewer?.message?.active?.length ?? 0) > 0;
 
   const hasModConfig =
+    (roleConfigs.moderator?.content?.active?.length ?? 0) > 0 ||
     (roleConfigs.moderator?.name?.active?.length ?? 0) > 0 ||
     (roleConfigs.moderator?.message?.active?.length ?? 0) > 0;
 
   const hasMemberConfig =
+    (roleConfigs.member?.content?.active?.length ?? 0) > 0 ||
     (roleConfigs.member?.name?.active?.length ?? 0) > 0 ||
     (roleConfigs.member?.message?.active?.length ?? 0) > 0;
 
   const hasOwnerConfig =
+    (roleConfigs.owner?.content?.active?.length ?? 0) > 0 ||
     (roleConfigs.owner?.name?.active?.length ?? 0) > 0 ||
     (roleConfigs.owner?.message?.active?.length ?? 0) > 0;
 
@@ -272,12 +276,16 @@ function ChatConfigPanel({
           collapsed={viewerCollapsed}
           setCollapsed={setViewerCollapsed}
         >
-          {generalConfig?.contentActive?.length > 0 && (
-            <GeneralControls
-              generalConfig={generalConfig}
-              updateGeneralConfig={updateGeneralConfig}
+          {(roleConfigs.viewer?.content?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="viewer"
+              type="content"
+              config={roleConfigs.viewer.content}
+              updateRoleConfig={updateRoleConfig}
+              prefix="content"
             />
           )}
+
           {(roleConfigs.viewer?.name?.active?.length ?? 0) > 0 && (
             <FontAndColorControls
               role="viewer"
@@ -305,6 +313,16 @@ function ChatConfigPanel({
           collapsed={modCollapsed}
           setCollapsed={setModCollapsed}
         >
+          {(roleConfigs.moderator?.content?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="moderator"
+              type="content"
+              syncConfig={roleConfigs.viewer.content}
+              config={roleConfigs.moderator.content}
+              updateRoleConfig={updateRoleConfig}
+              prefix="modContent"
+            />
+          )}
           {(roleConfigs.moderator?.name?.active?.length ?? 0) > 0 && (
             <FontAndColorControls
               role="moderator"
@@ -333,6 +351,16 @@ function ChatConfigPanel({
           collapsed={memberCollapsed}
           setCollapsed={setMemberCollapsed}
         >
+          {(roleConfigs.member?.content?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="member"
+              type="content"
+              syncConfig={roleConfigs.viewer.content}
+              config={roleConfigs.member.content}
+              updateRoleConfig={updateRoleConfig}
+              prefix="memberContent"
+            />
+          )}
           {(roleConfigs.member?.name?.active?.length ?? 0) > 0 && (
             <FontAndColorControls
               role="member"
@@ -361,6 +389,16 @@ function ChatConfigPanel({
           collapsed={ownerCollapsed}
           setCollapsed={setOwnerCollapsed}
         >
+          {(roleConfigs.owner?.content?.active?.length ?? 0) > 0 && (
+            <FontAndColorControls
+              role="owner"
+              type="content"
+              syncConfig={roleConfigs.viewer.content}
+              config={roleConfigs.owner.content}
+              updateRoleConfig={updateRoleConfig}
+              prefix="ownerContent"
+            />
+          )}
           {(roleConfigs.owner?.name?.active?.length ?? 0) > 0 && (
             <FontAndColorControls
               role="owner"

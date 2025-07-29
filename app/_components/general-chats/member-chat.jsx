@@ -3,12 +3,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 
-function MemberChat({
-  padding,
-  flexDirection,
-  authorNameStyle,
-  authorMsgStyle,
-}) {
+function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   const makeGoogleFontLink = (style, id) => {
     if (!style?.fontFamily) return null;
     const family = style.fontFamily.replace(/['"]/g, "").split(",")[0].trim();
@@ -45,18 +40,25 @@ function MemberChat({
     };
   }, [nameFont?.href, msgFont?.href]); // re-run when hrefs change
 
-  const previewStyle = {
-    padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
-    transition: "padding 0.2s",
-    ...(flexDirection && {
-      display: "flex",
-      flexDirection,
-    }),
-  };
-  console.log(authorNameStyle);
+  // Select where style to apply
+  const filteredContentStyle = ["padding", "flexDirection"];
+  const filteredAvatarStyle = ["display"];
+
+  const CntStyle = Object.fromEntries(
+    Object.entries(contentStyle).filter(([key]) =>
+      filteredContentStyle.includes(key)
+    )
+  );
+  const AvatarStyle = Object.fromEntries(
+    Object.entries(contentStyle).filter(([key]) =>
+      filteredAvatarStyle.includes(key)
+    )
+  );
+  console.log("Member style", contentStyle);
+
   return (
     <rz-chat-wrapper author-type="member" className="items-center">
-      <rz-author-photo id="author-photo">
+      <rz-author-photo id="author-photo" style={AvatarStyle}>
         <Image
           src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1720782939/yt-profile-pict.png"
           alt="user"
@@ -64,7 +66,7 @@ function MemberChat({
           height={24}
         />
       </rz-author-photo>
-      <rz-chat-content id="content" style={previewStyle}>
+      <rz-chat-content id="content" style={CntStyle}>
         <rz-name-wrapper className="flex whitespace-nowrap shrink-0 items-center">
           <div id="author-name" className="w-fit" style={authorNameStyle}>
             Member Name
