@@ -14,7 +14,7 @@ const defaultStyle = {
 };
 const defaultContentStyle = {
   active: [],
-  contentPadding: { top: 2, right: 2, bottom: 2, left: 2 },
+  padding: { top: 2, right: 2, bottom: 2, left: 2 },
   contentMargin: { top: 2, right: 2, bottom: 2, left: 2 },
   avatar: "block",
   flexDirection: "row",

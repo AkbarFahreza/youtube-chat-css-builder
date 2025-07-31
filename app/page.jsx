@@ -31,7 +31,7 @@ export default function Home() {
 
     return {
       padding: config.active.includes(`${prefix}Padding`)
-        ? `${config.contentPadding.top}px ${config.contentPadding.right}px ${config.contentPadding.bottom}px ${config.contentPadding.left}px`
+        ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
         : undefined,
 
       backgroundColor: config.active.includes(`${prefix}BgColor`)

@@ -38,7 +38,7 @@ export default function FourSideIput({
       <div className="flex px-4 flew-row justify-between pb-2">
         <div className="flex flex-row gap-2 items-center">
           <p className="text-white">{label}</p>
-          {prefix !== "name" && prefix !== "msg" && (
+          {prefix !== "name" && prefix !== "msg" && prefix !== "content" && (
             <div className="group/sync relative cursor-pointer">
               <Link2
                 className="group-hover/sync:text-purple-500"
