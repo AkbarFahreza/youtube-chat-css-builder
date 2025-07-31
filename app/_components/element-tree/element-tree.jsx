@@ -34,7 +34,7 @@ export default function ConfigSection({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showMenu]);
-
+  // console.log(activeOptions);
   return (
     <div>
       {/* Section Title */}
@@ -57,7 +57,7 @@ export default function ConfigSection({
               }`}
             />
           )}
-          <span>{title}</span>
+          <span className="text-nowrap">{title}</span>
         </div>
         <button
           ref={buttonRef}

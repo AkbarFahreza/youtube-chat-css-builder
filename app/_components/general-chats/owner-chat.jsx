@@ -1,9 +1,11 @@
+// ./_components/general-chats/viewer-chat.jsx
 "use client";
 
 import React, { useEffect } from "react";
 import Image from "next/image";
+import { UndoIcon } from "lucide-react";
 
-function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
+function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   const makeGoogleFontLink = (style, id) => {
     if (!style?.fontFamily) return null;
     const family = style.fontFamily.replace(/['"]/g, "").split(",")[0].trim();
@@ -17,6 +19,7 @@ function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
 
   const nameFont = makeGoogleFontLink(authorNameStyle, "name");
   const msgFont = makeGoogleFontLink(authorMsgStyle, "msg");
+
   useEffect(() => {
     [nameFont, msgFont].forEach((font) => {
       if (!font) return;
@@ -29,6 +32,7 @@ function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
         document.head.appendChild(link);
       }
     });
+
     // (Optional) clean up if component unmounts
     return () => {
       [nameFont, msgFont].forEach((font) => {
@@ -54,10 +58,9 @@ function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
       filteredAvatarStyle.includes(key)
     )
   );
-  console.log("Member style", contentStyle);
 
   return (
-    <rz-chat-wrapper author-type="member" className="items-center">
+    <rz-chat-wrapper author-type="owner" className="items-center">
       <rz-author-photo id="author-photo" style={AvatarStyle}>
         <Image
           src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1720782939/yt-profile-pict.png"
@@ -67,25 +70,27 @@ function MemberChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
         />
       </rz-author-photo>
       <rz-chat-content id="content" style={CntStyle}>
-        <rz-name-wrapper className="flex whitespace-nowrap shrink-0 items-center">
-          <div id="author-name" className="w-fit" style={authorNameStyle}>
-            Member Name
+        <rz-name-wrapper>
+          <div
+            id="author-name"
+            className="w-fit"
+            style={{
+              ...authorNameStyle,
+              padding: authorNameStyle?.padding || "2px 4px 2px 4px",
+              borderRadius: "2px",
+              //   color: authorNameStyle?.fontColor || "#000000",
+              backgroundColor: authorNameStyle?.backgroundColor || "#ffd600",
+            }}
+          >
+            Dek Reza
           </div>
-          <Image
-            src="https://res.cloudinary.com/dxcmt3zoc/image/upload/v1680602632/Frame_2_hzxp2b.png"
-            alt="Pelanggan (6 bulan)"
-            width={16}
-            height={16}
-            style={{ height: 15 }}
-          />
         </rz-name-wrapper>
-
-        <span id="message" style={authorMsgStyle} dir="auto">
-          aku tuh member banget sih bang
+        <span id="message" style={authorMsgStyle}>
+          Owner message are here
         </span>
       </rz-chat-content>
     </rz-chat-wrapper>
   );
 }
 
-export default MemberChat;
+export default OwnerChat;
