@@ -51,7 +51,7 @@ export default function FontEditor({
 
     setFontFamily(v.fontFamily || "Inter");
     setFontColor(v.fontColor || "#ffffff");
-    setFontWeight(v.fontWeight || "400");
+    setFontWeight(v.fontWeight || "300");
     setFontSize(v.fontSize || 16);
     setLineHeight(v.lineHeight || "");
     setTextAlign(v.textAlign || "left");
