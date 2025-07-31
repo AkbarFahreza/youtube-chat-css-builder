@@ -4,7 +4,7 @@ import React from "react";
 import { useRef } from "react";
 import { Link2, X } from "lucide-react";
 
-export default function PaddingConfig({
+export default function FourSideIput({
   padding,
   setPadding,
   setSync,

@@ -1,6 +1,6 @@
 // "use client";
 import { Link2, X } from "lucide-react";
-export function BooleanSelector({
+export function OptionsSelector({
   label,
   opts,
   value,

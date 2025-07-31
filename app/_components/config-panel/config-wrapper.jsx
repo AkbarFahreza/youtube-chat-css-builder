@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import PaddingConfig from "./config-editor/padding-config";
 import ColorSelector from "./config-editor/color-selector";
 import FontEditor from "./config-editor/font-config";
-import { BooleanSelector } from "./config-editor/boolean-selector";
+import { OptionsSelector } from "./config-editor/options-selector";
 import CssOutput from "./css-output";
+import FourSideIput from "./config-editor/four-side-input";
 
 function formatLabel(text) {
   const withSpaces = text.replace(/([A-Z])/g, " $1").trim();
@@ -69,7 +69,7 @@ function Section({ title, collapsed, setCollapsed, children }) {
   );
 }
 
-function FontAndColorControls({
+function ConfigControls({
   role,
   type,
   syncConfig,
@@ -112,7 +112,7 @@ function FontAndColorControls({
   return (
     <>
       {config.active.includes(`${prefix}FlexDirection`) && (
-        <BooleanSelector
+        <OptionsSelector
           label={formatLabel(`${prefix}Flex Direction`)}
           opts={FlexDirOpts}
           value={config.flexDirection}
@@ -138,7 +138,7 @@ function FontAndColorControls({
         />
       )}
       {config.active.includes(`${prefix}Avatar`) && (
-        <BooleanSelector
+        <OptionsSelector
           label={formatLabel(`${prefix}Avatar`)}
           opts={avatarDisplayOpts}
           value={config.avatar}
@@ -214,7 +214,7 @@ function FontAndColorControls({
       )}
 
       {config.active.includes(`${prefix}Padding`) && (
-        <PaddingConfig
+        <FourSideIput
           label={formatLabel(`${prefix} Padding`)}
           padding={config.padding}
           setSync={() => {
@@ -277,7 +277,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
           setCollapsed={setViewerCollapsed}
         >
           {(roleConfigs.viewer?.content?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="viewer"
               type="content"
               config={roleConfigs.viewer.content}
@@ -287,7 +287,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
           )}
 
           {(roleConfigs.viewer?.name?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="viewer"
               type="name"
               config={roleConfigs.viewer.name}
@@ -296,7 +296,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.viewer?.message?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="viewer"
               type="message"
               config={roleConfigs.viewer.message}
@@ -314,7 +314,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
           setCollapsed={setModCollapsed}
         >
           {(roleConfigs.moderator?.content?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="moderator"
               type="content"
               syncConfig={roleConfigs.viewer.content}
@@ -324,7 +324,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.moderator?.name?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="moderator"
               type="name"
               syncConfig={roleConfigs.viewer.name}
@@ -334,7 +334,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.moderator?.message?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="moderator"
               type="message"
               syncConfig={roleConfigs.viewer.message}
@@ -352,7 +352,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
           setCollapsed={setMemberCollapsed}
         >
           {(roleConfigs.member?.content?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="member"
               type="content"
               syncConfig={roleConfigs.viewer.content}
@@ -362,7 +362,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.member?.name?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="member"
               type="name"
               syncConfig={roleConfigs.viewer.name}
@@ -372,7 +372,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.member?.message?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="member"
               type="message"
               syncConfig={roleConfigs.viewer.message}
@@ -390,7 +390,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
           setCollapsed={setOwnerCollapsed}
         >
           {(roleConfigs.owner?.content?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="owner"
               type="content"
               syncConfig={roleConfigs.viewer.content}
@@ -400,7 +400,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.owner?.name?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="owner"
               type="name"
               syncConfig={roleConfigs.viewer.name}
@@ -410,7 +410,7 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
             />
           )}
           {(roleConfigs.owner?.message?.active?.length ?? 0) > 0 && (
-            <FontAndColorControls
+            <ConfigControls
               role="owner"
               type="message"
               syncConfig={roleConfigs.viewer.message}
