@@ -11,11 +11,7 @@ function formatLabel(text) {
   const withSpaces = text.replace(/([A-Z])/g, " $1").trim();
   return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 }
-export default function ConfigWrapper({
-  roleConfigs,
-  updateRoleConfig,
-  cssOutput,
-}) {
+export default function ConfigWrapper({ roleConfigs, updateRoleConfig }) {
   const [mode, setMode] = useState("design");
 
   return (
@@ -43,7 +39,7 @@ export default function ConfigWrapper({
           updateRoleConfig={updateRoleConfig}
         />
       ) : (
-        <CssOutput cssOutput={cssOutput} />
+        <CssOutput roleConfigs={roleConfigs} />
       )}
     </div>
   );
@@ -109,6 +105,8 @@ function FontAndColorControls({
     { label: "Show", value: "block" },
     { label: "Hide", value: "none" },
   ];
+  const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
+
   return (
     <>
       {config.active.includes(`${prefix}FlexDirection`) && (

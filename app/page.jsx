@@ -110,7 +110,7 @@ export default function Home() {
           Youtube Chat CSS Builder
         </h1>
       </div> */}
-      <div className="grid grid-cols-[230px_minmax(500px,_1fr)_300px] gap-4 w-full">
+      <div className="grid grid-cols-[270px_minmax(500px,_1fr)_300px] gap-4 w-full">
         <div
           className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
           id="element-tree "
@@ -401,7 +401,6 @@ export default function Home() {
         <ConfigWrapper
           roleConfigs={roleConfigs}
           updateRoleConfig={updateRoleConfig}
-          cssOutput={cssOutput}
         />
       </div>
     </div>
