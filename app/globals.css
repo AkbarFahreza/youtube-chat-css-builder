@@ -36,6 +36,7 @@ rz-chat-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  width: fit-content;
 }
 
 rz-chat-wrapper #author-photo {
@@ -48,7 +49,16 @@ rz-chat-wrapper rz-name-wrapper {
 rz-chat-content {
   width: 100%;
 }
-
+rz-name-wrapper {
+  display: inline-flex;
+  align-items: baseline;
+  box-sizing: content-box;
+}
+rz-chat-wrapper #message {
+  word-wrap: break-word;
+  word-break: break-all;
+  box-sizing: content-box;
+}
 .scrollbar {
   scrollbar-width: thin;
 }

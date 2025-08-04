@@ -1,9 +1,7 @@
-// ./_components/general-chats/viewer-chat.jsx
 "use client";
 
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { UndoIcon } from "lucide-react";
 
 function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   const makeGoogleFontLink = (style, id) => {
@@ -45,7 +43,7 @@ function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   }, [nameFont?.href, msgFont?.href]); // re-run when hrefs change
 
   // Select where style to apply
-  const filteredContentStyle = ["padding", "flexDirection"];
+  const filteredContentStyle = ["padding", "flexDirection", "margin"];
   const filteredAvatarStyle = ["display"];
 
   const CntStyle = Object.fromEntries(
@@ -78,7 +76,6 @@ function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
               ...authorNameStyle,
               padding: authorNameStyle?.padding || "2px 4px 2px 4px",
               borderRadius: "2px",
-              //   color: authorNameStyle?.fontColor || "#000000",
               backgroundColor: authorNameStyle?.backgroundColor || "#ffd600",
             }}
           >

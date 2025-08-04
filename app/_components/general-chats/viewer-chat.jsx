@@ -1,4 +1,3 @@
-// ./_components/general-chats/viewer-chat.jsx
 "use client";
 
 import React, { useEffect } from "react";
@@ -44,7 +43,7 @@ function ViewerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   }, [nameFont?.href, msgFont?.href]); // re-run when hrefs change
 
   // Select where style to apply
-  const filteredContentStyle = ["padding", "flexDirection"];
+  const filteredContentStyle = ["padding", "flexDirection", "margin"];
   const filteredAvatarStyle = ["display"];
 
   const CntStyle = Object.fromEntries(
