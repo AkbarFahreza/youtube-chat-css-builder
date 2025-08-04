@@ -20,7 +20,7 @@ export default function Home() {
     fontWeight: config.fontWeight,
     fontFamily: `'${config.fontFamily}'`,
     color: config.fontColor,
-    lineHeight: config.lineHeight,
+    lineHeight: config.lineHeight || "normal",
     textAlign: config.textAlign,
     padding: config.active.includes(`${prefix}Padding`)
       ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
@@ -30,86 +30,25 @@ export default function Home() {
     // const active = config.active || [];
 
     return {
-      padding: config.active.includes(`${prefix}Padding`)
-        ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
-        : undefined,
-
       backgroundColor: config.active.includes(`${prefix}BgColor`)
         ? config.contentBgColor
         : undefined,
 
       display: config.avatar || "block",
       flexDirection: config.flexDirection || "row",
+      margin: config.active.includes(`${prefix}Margin`)
+        ? `${config.margin.top}px ${config.margin.right}px ${config.margin.bottom}px ${config.margin.left}px`
+        : undefined,
+      padding: config.active.includes(`${prefix}Padding`)
+        ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
+        : undefined,
     };
   };
 
   const { roleConfigs, updateRoleConfig } = useChatStyleConfig();
 
-  // Compose CSS output for all active configs
-  let cssOutput = "";
-  // const GeneralConfig = generalConfig;
-  const viewerName = roleConfigs.viewer.name;
-  const viewerMsg = roleConfigs.viewer.message;
-  const modName = roleConfigs.moderator.name;
-  const modMsg = roleConfigs.moderator.message;
-  // =============================
-  // Viewer config
-  // =============================
-
-  //============= Viewer Name config =============
-  if (
-    viewerName.active.includes("nameFontFamily") ||
-    viewerName.active.includes("namePadding") ||
-    viewerName.active.includes("nameBgColor")
-  ) {
-    cssOutput += `yt-live-chat-message-renderer #author-name {\n`;
-    cssOutput += `  font-family: "${viewerName.fontFamily}" !important;\n`;
-    cssOutput += `  color: ${viewerName.fontColor} !important;\n`;
-    cssOutput += `  font-size: ${viewerName.fontSize}px !important;\n`;
-    cssOutput += `  font-weight: ${viewerName.fontWeight}px !important;\n`;
-    cssOutput += `  line-height: ${viewerName.lineHeight} !important;\n`;
-    cssOutput += `  text-align: ${viewerName.textAlign} !important;\n`;
-    if (viewerName.active.includes("namePadding")) {
-      const p = viewerName.padding;
-      cssOutput += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
-    }
-    if (viewerName.active.includes("nameBgColor")) {
-      cssOutput += `  background-color: ${viewerName.nameBgColor} !important;\n`;
-    }
-    cssOutput += `}\n\n`;
-  }
-
-  //============= Viewer Message config =============
-  if (
-    viewerMsg.active.includes("msgFontFamily") ||
-    viewerMsg.active.includes("msgPadding") ||
-    viewerMsg.active.includes("msgBgColor")
-  ) {
-    cssOutput += `yt-live-chat-message-renderer #message {\n`;
-    cssOutput += `  font-family: "${viewerMsg.fontFamily}" !important;\n`;
-    cssOutput += `  color: ${viewerMsg.fontColor} !important;\n`;
-    cssOutput += `  font-size: ${viewerMsg.fontSize}px !important;\n`;
-    cssOutput += `  font-weight: ${viewerMsg.fontWeight}px !important;\n`;
-    cssOutput += `  line-height: ${viewerMsg.lineHeight} !important;\n`;
-    cssOutput += `  text-align: ${viewerMsg.textAlign} !important;\n`;
-
-    if (viewerMsg.active.includes("msgPadding")) {
-      const p = viewerMsg.padding;
-      cssOutput += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
-    }
-    if (viewerMsg.active.includes("msgBgColor")) {
-      cssOutput += `  background-color: ${viewerMsg.bgColor};\n`;
-    }
-    cssOutput += `}\n\n`;
-  }
-
   return (
     <div className="flex flex-col min-h-[100vh] max-h-[100vh] overflow-hidden">
-      {/* <div className="py-2 px-6 bg-[#383838] w-full flex flex-row justify-between">
-        <h1 className="text-base font-bold text-white">
-          Youtube Chat CSS Builder
-        </h1>
-      </div> */}
       <div className="grid grid-cols-[270px_minmax(500px,_1fr)_300px] gap-4 w-full">
         <div
           className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
@@ -119,10 +58,10 @@ export default function Home() {
             <ConfigSection
               title="Viewer Chat"
               options={[
-                { label: "Add Padding", value: "contentPadding" },
                 { label: "Flex Direction", value: "contentFlexDirection" },
                 { label: "Avatar", value: "contentAvatar" },
                 { label: "Content Margin", value: "contentMargin" },
+                { label: "Content Padding", value: "contentPadding" },
               ]}
               activeOptions={roleConfigs.viewer.content.active}
               onAddOption={(opt) => {
@@ -139,7 +78,7 @@ export default function Home() {
                   title: "Name",
                   options: [
                     { label: "Background Color", value: "nameBgColor" },
-                    { label: "Font Family", value: "nameFontFamily" },
+                    { label: "Font Name", value: "nameFontFamily" },
                     { label: "Padding", value: "namePadding" },
                   ],
                   activeOptions: roleConfigs.viewer.name.active,
@@ -157,7 +96,7 @@ export default function Home() {
                   title: "Message",
                   options: [
                     { label: "Background Color", value: "msgBgColor" },
-                    { label: "Font Family", value: "msgFontFamily" },
+                    { label: "Font Message", value: "msgFontFamily" },
                     { label: "Padding", value: "msgPadding" },
                   ],
                   activeOptions: roleConfigs.viewer.message.active,
@@ -176,10 +115,10 @@ export default function Home() {
             <ConfigSection
               title="Moderator Chat"
               options={[
-                { label: "Add Padding", value: "modContentPadding" },
                 { label: "Flex Direction", value: "modContentFlexDirection" },
                 { label: "Avatar", value: "modContentAvatar" },
                 { label: "Content Margin", value: "modContentMargin" },
+                { label: "Content Padding", value: "modContentPadding" },
               ]}
               activeOptions={roleConfigs.moderator.content.active}
               onAddOption={(opt) => {
@@ -196,7 +135,7 @@ export default function Home() {
                   title: "Name",
                   options: [
                     { label: "Background Color", value: "modNameBgColor" },
-                    { label: "Font Family", value: "modNameFontFamily" },
+                    { label: "Font Name", value: "modNameFontFamily" },
                     { label: "Padding", value: "modNamePadding" },
                   ],
                   activeOptions: roleConfigs.moderator.name.active,
@@ -214,7 +153,7 @@ export default function Home() {
                   title: "Message",
                   options: [
                     { label: "Background Color", value: "modMsgBgColor" },
-                    { label: "Font Family", value: "modMsgFontFamily" },
+                    { label: "Font Name", value: "modMsgFontFamily" },
                     { label: "Padding", value: "modMsgPadding" },
                   ],
                   activeOptions: roleConfigs.moderator.message.active,
@@ -233,13 +172,13 @@ export default function Home() {
             <ConfigSection
               title="Member Chat"
               options={[
-                { label: "Add Padding", value: "memberContentPadding" },
                 {
                   label: "Flex Direction",
                   value: "memberContentFlexDirection",
                 },
                 { label: "Avatar", value: "memberContentAvatar" },
                 { label: "Content Margin", value: "memberContentMargin" },
+                { label: "Content Padding", value: "memberContentPadding" },
               ]}
               activeOptions={roleConfigs.member.content.active}
               onAddOption={(opt) => {
@@ -258,7 +197,7 @@ export default function Home() {
                   title: "Name",
                   options: [
                     { label: "Background Color", value: "memberNameBgColor" },
-                    { label: "Font Family", value: "memberNameFontFamily" },
+                    { label: "Font Name", value: "memberNameFontFamily" },
                     { label: "Padding", value: "memberNamePadding" },
                   ],
                   activeOptions: roleConfigs.member.name.active,
@@ -276,7 +215,7 @@ export default function Home() {
                   title: "Message",
                   options: [
                     { label: "Background Color", value: "memberMsgBgColor" },
-                    { label: "Font Family", value: "memberMsgFontFamily" },
+                    { label: "Font Message", value: "memberMsgFontFamily" },
                     { label: "Padding", value: "memberMsgPadding" },
                   ],
                   activeOptions: roleConfigs.member.message.active,
@@ -295,10 +234,10 @@ export default function Home() {
             <ConfigSection
               title="Owner Chat"
               options={[
-                { label: "Add Padding", value: "ownerContentPadding" },
                 { label: "Flex Direction", value: "ownerContentFlexDirection" },
                 { label: "Avatar", value: "ownerContentAvatar" },
                 { label: "Content Margin", value: "ownerContentMargin" },
+                { label: "Content Padding", value: "ownerContentPadding" },
               ]}
               activeOptions={roleConfigs.owner.content.active}
               onAddOption={(opt) => {
@@ -317,7 +256,7 @@ export default function Home() {
                   title: "Name",
                   options: [
                     { label: "Background Color", value: "ownerNameBgColor" },
-                    { label: "Font Family", value: "ownerNameFontFamily" },
+                    { label: "Font Name", value: "ownerNameFontFamily" },
                     { label: "Padding", value: "ownerNamePadding" },
                   ],
                   activeOptions: roleConfigs.owner.name.active,
@@ -335,7 +274,7 @@ export default function Home() {
                   title: "Message",
                   options: [
                     { label: "Background Color", value: "ownerMsgBgColor" },
-                    { label: "Font Family", value: "ownerMsgFontFamily" },
+                    { label: "Font Message", value: "ownerMsgFontFamily" },
                     { label: "Padding", value: "ownerMsgPadding" },
                   ],
                   activeOptions: roleConfigs.owner.message.active,

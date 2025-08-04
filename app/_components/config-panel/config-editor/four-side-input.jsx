@@ -5,25 +5,25 @@ import { useRef } from "react";
 import { Link2, X } from "lucide-react";
 
 export default function FourSideIput({
-  padding,
-  setPadding,
+  value,
+  setValue,
   setSync,
   onDelete,
   label,
   prefix,
 }) {
   const clickedOnce = useRef(false);
-  const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
-  const safePadding = { ...defaultPadding, ...padding };
+  const defaultValue = { top: 0, right: 0, bottom: 0, left: 0 };
+  const safeValue = { ...defaultValue, ...value };
 
   // update one side, preserving the rest
-  const handlePaddingChange = (side, rawValue) => {
+  const handleValueChange = (side, rawValue) => {
     const num = Number(rawValue);
     const updated = {
-      ...safePadding,
+      ...safeValue,
       [side]: isNaN(num) ? 0 : num,
     };
-    setPadding(updated);
+    setValue(updated);
   };
 
   const sides = [
@@ -65,7 +65,7 @@ export default function FourSideIput({
               type="number"
               min={0}
               className="bg-secondary py-1 px-3 rounded text-sm text-white outline-none"
-              value={safePadding[side.value]}
+              value={safeValue[side.value]}
               onClick={(e) => {
                 if (!clickedOnce.current) {
                   e.target.select();
@@ -78,7 +78,7 @@ export default function FourSideIput({
               onChange={(e) => {
                 const cleaned = e.target.value.replace(/^0+(?=\d)/, "");
                 e.target.value = cleaned;
-                handlePaddingChange(side.value, e.target.value);
+                handleValueChange(side.value, e.target.value);
               }}
               style={{ width: 55 }}
             />

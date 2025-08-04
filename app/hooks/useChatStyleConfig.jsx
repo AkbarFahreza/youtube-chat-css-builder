@@ -15,7 +15,7 @@ const defaultStyle = {
 const defaultContentStyle = {
   active: [],
   padding: { top: 2, right: 2, bottom: 2, left: 2 },
-  contentMargin: { top: 2, right: 2, bottom: 2, left: 2 },
+  margin: { top: 2, right: 2, bottom: 2, left: 2 },
   avatar: "block",
   flexDirection: "row",
   contentBgColor: "#a819fe",

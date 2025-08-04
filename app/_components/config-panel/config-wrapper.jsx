@@ -106,6 +106,7 @@ function ConfigControls({
     { label: "Hide", value: "none" },
   ];
   const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
+  const defaultMargin = { top: 2, right: 2, bottom: 2, left: 2 };
 
   return (
     <>
@@ -152,6 +153,31 @@ function ConfigControls({
               type,
               "active",
               config.active.filter((o) => o !== `${prefix}Avatar`)
+            );
+          }}
+        />
+      )}
+      {config.active.includes(`${prefix}Margin`) && (
+        <FourSideIput
+          label={formatLabel(`${prefix} Margin`)}
+          value={config.margin}
+          setSync={() => {
+            updateRoleConfig(role, type, "margin", syncConfig.margin);
+          }}
+          prefix={prefix}
+          setValue={(partialMargin) =>
+            updateRoleConfig(role, type, "margin", {
+              ...config.margin,
+              ...partialMargin,
+            })
+          }
+          onDelete={() => {
+            updateRoleConfig(role, type, "margin", defaultMargin);
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((opt) => opt !== `${prefix}Margin`)
             );
           }}
         />
@@ -214,12 +240,12 @@ function ConfigControls({
       {config.active.includes(`${prefix}Padding`) && (
         <FourSideIput
           label={formatLabel(`${prefix} Padding`)}
-          padding={config.padding}
+          value={config.padding}
           setSync={() => {
             updateRoleConfig(role, type, "padding", syncConfig.padding);
           }}
           prefix={prefix}
-          setPadding={(partialPadding) =>
+          setValue={(partialPadding) =>
             updateRoleConfig(role, type, "padding", {
               ...config.padding,
               ...partialPadding,
