@@ -25,10 +25,11 @@ export default function Home() {
     padding: config.active.includes(`${prefix}Padding`)
       ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
       : undefined,
+    margin: config.active.includes(`${prefix}Margin`)
+      ? `${config.margin.top}px ${config.margin.right}px ${config.margin.bottom}px ${config.margin.left}px`
+      : undefined,
   });
   const getContentStyle = (config, prefix) => {
-    // const active = config.active || [];
-
     return {
       backgroundColor: config.active.includes(`${prefix}BgColor`)
         ? config.contentBgColor
@@ -80,6 +81,7 @@ export default function Home() {
                     { label: "Background Color", value: "nameBgColor" },
                     { label: "Font Name", value: "nameFontFamily" },
                     { label: "Padding", value: "namePadding" },
+                    { label: "Margin", value: "nameMargin" },
                   ],
                   activeOptions: roleConfigs.viewer.name.active,
                   onAddOption: (opt) => {
@@ -98,6 +100,7 @@ export default function Home() {
                     { label: "Background Color", value: "msgBgColor" },
                     { label: "Font Message", value: "msgFontFamily" },
                     { label: "Padding", value: "msgPadding" },
+                    { label: "Margin", value: "msgMargin" },
                   ],
                   activeOptions: roleConfigs.viewer.message.active,
                   onAddOption: (opt) => {
@@ -137,6 +140,7 @@ export default function Home() {
                     { label: "Background Color", value: "modNameBgColor" },
                     { label: "Font Name", value: "modNameFontFamily" },
                     { label: "Padding", value: "modNamePadding" },
+                    { label: "Margin", value: "modNameMargin" },
                   ],
                   activeOptions: roleConfigs.moderator.name.active,
                   onAddOption: (opt) => {
@@ -155,6 +159,7 @@ export default function Home() {
                     { label: "Background Color", value: "modMsgBgColor" },
                     { label: "Font Name", value: "modMsgFontFamily" },
                     { label: "Padding", value: "modMsgPadding" },
+                    { label: "Margin", value: "modMsgMargin" },
                   ],
                   activeOptions: roleConfigs.moderator.message.active,
                   onAddOption: (opt) => {
@@ -199,6 +204,7 @@ export default function Home() {
                     { label: "Background Color", value: "memberNameBgColor" },
                     { label: "Font Name", value: "memberNameFontFamily" },
                     { label: "Padding", value: "memberNamePadding" },
+                    { label: "Margin", value: "memberNameMargin" },
                   ],
                   activeOptions: roleConfigs.member.name.active,
                   onAddOption: (opt) => {
@@ -217,6 +223,7 @@ export default function Home() {
                     { label: "Background Color", value: "memberMsgBgColor" },
                     { label: "Font Message", value: "memberMsgFontFamily" },
                     { label: "Padding", value: "memberMsgPadding" },
+                    { label: "Margin", value: "memberMsgMargin" },
                   ],
                   activeOptions: roleConfigs.member.message.active,
                   onAddOption: (opt) => {
@@ -258,6 +265,7 @@ export default function Home() {
                     { label: "Background Color", value: "ownerNameBgColor" },
                     { label: "Font Name", value: "ownerNameFontFamily" },
                     { label: "Padding", value: "ownerNamePadding" },
+                    { label: "Margin", value: "ownerNameMargin" },
                   ],
                   activeOptions: roleConfigs.owner.name.active,
                   onAddOption: (opt) => {
@@ -276,6 +284,7 @@ export default function Home() {
                     { label: "Background Color", value: "ownerMsgBgColor" },
                     { label: "Font Message", value: "ownerMsgFontFamily" },
                     { label: "Padding", value: "ownerMsgPadding" },
+                    { label: "Margin", value: "ownerMsgMargin" },
                   ],
                   activeOptions: roleConfigs.owner.message.active,
                   onAddOption: (opt) => {

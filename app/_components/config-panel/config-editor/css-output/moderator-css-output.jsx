@@ -29,6 +29,7 @@ export const ModeratorCss = (moderator) => {
   ) {
     css += `yt-live-chat-text-message-renderer[author-type="moderator"] #content {\n`;
     if (contentActive.includes("modContentFlexDirection")) {
+      css += `  display: flex !important;\n`;
       css += `  flex-direction: ${moderator.content.flexDirection} !important;\n`;
     }
     if (contentActive.includes("modContentMargin")) {
@@ -66,10 +67,13 @@ export const ModeratorCss = (moderator) => {
       } !important;\n`;
       css += `  text-align: ${moderator.name.textAlign} !important;\n`;
     }
-    if (nameActive.includes("modNamePadding")) {
-      css += `  padding: ${getPaddingString(
-        moderator.name.padding
-      )} !important;\n`;
+    if (nameActive.includes("modoeratorNamePadding")) {
+      const p = moderator.name.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (nameActive.includes("modoeratorNameMargin")) {
+      const m = moderator.name.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (nameActive.includes("modNameBgColor")) {
       css += `  background-color: ${moderator.name.bgColor} !important;\n`;
@@ -94,10 +98,13 @@ export const ModeratorCss = (moderator) => {
       } !important;\n`;
       css += `  text-align: ${moderator.message.textAlign} !important;\n`;
     }
-    if (msgActive.includes("modMsgPadding")) {
-      css += `  padding: ${getPaddingString(
-        moderator.message.padding
-      )} !important;\n`;
+    if (msgActive.includes("moderatorMsgPadding")) {
+      const p = moderator.message.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (msgActive.includes("moderatorMsgMargin")) {
+      const m = moderator.message.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (msgActive.includes("modMsgBgColor")) {
       css += `  background-color: ${moderator.message.bgColor} !important;\n`;

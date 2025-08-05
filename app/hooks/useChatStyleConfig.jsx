@@ -11,6 +11,7 @@ const defaultStyle = {
   bgColor: "#a819fe",
   fontSize: 15,
   padding: { top: 2, right: 2, bottom: 2, left: 2 },
+  margin: { top: 2, right: 2, bottom: 2, left: 2 },
 };
 const defaultContentStyle = {
   active: [],

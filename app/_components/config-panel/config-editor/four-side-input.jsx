@@ -6,6 +6,7 @@ import { Link2, X } from "lucide-react";
 
 export default function FourSideIput({
   value,
+  configType,
   setValue,
   setSync,
   onDelete,
@@ -32,6 +33,11 @@ export default function FourSideIput({
     { label: "Bottom", value: "bottom" },
     { label: "Left", value: "left" },
   ];
+
+  const inputMin =
+    configType === "padding" || configType === "borderRadius"
+      ? { min: 0 }
+      : { min: -100 };
 
   return (
     <div className="pt-4 pb-5 border-b group border-white/20 flex flex-col space-y-3">
@@ -63,7 +69,7 @@ export default function FourSideIput({
             <span className="text-white/70 text-xs">{side.label}</span>
             <input
               type="number"
-              min={0}
+              {...inputMin}
               className="bg-secondary py-1 px-3 rounded text-sm text-white outline-none"
               value={safeValue[side.value]}
               onClick={(e) => {

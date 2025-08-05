@@ -160,6 +160,7 @@ function ConfigControls({
       {config.active.includes(`${prefix}Margin`) && (
         <FourSideIput
           label={formatLabel(`${prefix} Margin`)}
+          configType="margin"
           value={config.margin}
           setSync={() => {
             updateRoleConfig(role, type, "margin", syncConfig.margin);
@@ -240,6 +241,7 @@ function ConfigControls({
       {config.active.includes(`${prefix}Padding`) && (
         <FourSideIput
           label={formatLabel(`${prefix} Padding`)}
+          configType="padding"
           value={config.padding}
           setSync={() => {
             updateRoleConfig(role, type, "padding", syncConfig.padding);
