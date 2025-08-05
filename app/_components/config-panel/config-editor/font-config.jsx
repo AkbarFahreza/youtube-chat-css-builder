@@ -24,7 +24,7 @@ export default function FontEditor({
   // Local state for each field
   const [fontFamily, setFontFamily] = useState(value?.fontFamily || "Inter");
   const [fontColor, setFontColor] = useState(value?.fontColor || "#ffffff");
-  const [fontWeight, setFontWeight] = useState(value?.fontWeight || "400");
+  const [fontWeight, setFontWeight] = useState(value?.fontWeight || "500");
   const [fontSize, setFontSize] = useState(value?.fontSize || 16);
   const [lineHeight, setLineHeight] = useState(value?.lineHeight || "");
   const [textAlign, setTextAlign] = useState(value?.textAlign || "left");
@@ -51,7 +51,7 @@ export default function FontEditor({
 
     setFontFamily(v.fontFamily || "Inter");
     setFontColor(v.fontColor || "#ffffff");
-    setFontWeight(v.fontWeight || "300");
+    setFontWeight(v.fontWeight || "500");
     setFontSize(v.fontSize || 16);
     setLineHeight(v.lineHeight || "");
     setTextAlign(v.textAlign || "left");

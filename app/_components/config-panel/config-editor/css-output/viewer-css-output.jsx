@@ -6,24 +6,13 @@ export const ViewerCss = (viewer) => {
   const nameActive = viewer?.name?.active || [];
   const msgActive = viewer?.message?.active || [];
 
-  // === Google Font Import ===
-  if (viewer.name.active.includes("nameFontFamily")) {
-    const fontFamilyParam = viewer.name.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = viewer.name.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-  if (viewer.message.active.includes("msgFontFamily")) {
-    const fontFamilyParam = viewer.message.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = viewer.message.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-
   // === Viewer Content Style ===
   if (
     contentActive.includes("contentFlexDirection") ||
     contentActive.includes("contentMargin") ||
     contentActive.includes("contentPadding")
   ) {
+    css += `\n`;
     css += `yt-live-chat-text-message-renderer #content {\n`;
     if (contentActive.includes("contentFlexDirection")) {
       css += `  display: flex !important;\n`;

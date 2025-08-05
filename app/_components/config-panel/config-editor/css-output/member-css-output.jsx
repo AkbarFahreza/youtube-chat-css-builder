@@ -5,16 +5,16 @@ export const MemberCss = (member) => {
   const msgActive = member?.message?.active || [];
 
   // === Google Font Import ===
-  if (member.name.active.includes("memberNameFontFamily")) {
-    const fontFamilyParam = member.name.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = member.name.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-  if (member.message.active.includes("memberMsgFontFamily")) {
-    const fontFamilyParam = member.message.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = member.message.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
+  // if (member.name.active.includes("memberNameFontFamily")) {
+  //   const fontFamilyParam = member.name.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = member.name.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
+  // if (member.message.active.includes("memberMsgFontFamily")) {
+  //   const fontFamilyParam = member.message.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = member.message.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
 
   // === member Content Style ===
   if (

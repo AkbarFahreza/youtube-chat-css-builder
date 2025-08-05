@@ -17,7 +17,7 @@ export default function ConfigWrapper({ roleConfigs, updateRoleConfig }) {
   return (
     <div
       id="config-wrapper"
-      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-secondary "
+      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-secondary rounded-lg"
     >
       <div className="flex flex-row gap-1 pb-2 px-3">
         {["design", "output"].map((m) => (
@@ -85,7 +85,7 @@ function ConfigControls({
     [
       ["fontFamily", "Inter"],
       ["fontColor", defaultColor],
-      ["fontWeight", "400"],
+      ["fontWeight", "500"],
       ["lineHeight", ""],
       ["textAlign", "left"],
       ["fontSize", 15],
@@ -105,8 +105,8 @@ function ConfigControls({
     { label: "Show", value: "block" },
     { label: "Hide", value: "none" },
   ];
-  const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
-  const defaultMargin = { top: 2, right: 2, bottom: 2, left: 2 };
+  const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
+  const defaultPadding = { top: 2, right: 2, bottom: 2, left: 2 };
 
   return (
     <>
@@ -153,32 +153,6 @@ function ConfigControls({
               type,
               "active",
               config.active.filter((o) => o !== `${prefix}Avatar`)
-            );
-          }}
-        />
-      )}
-      {config.active.includes(`${prefix}Margin`) && (
-        <FourSideIput
-          label={formatLabel(`${prefix} Margin`)}
-          configType="margin"
-          value={config.margin}
-          setSync={() => {
-            updateRoleConfig(role, type, "margin", syncConfig.margin);
-          }}
-          prefix={prefix}
-          setValue={(partialMargin) =>
-            updateRoleConfig(role, type, "margin", {
-              ...config.margin,
-              ...partialMargin,
-            })
-          }
-          onDelete={() => {
-            updateRoleConfig(role, type, "margin", defaultMargin);
-            updateRoleConfig(
-              role,
-              type,
-              "active",
-              config.active.filter((opt) => opt !== `${prefix}Margin`)
             );
           }}
         />
@@ -260,6 +234,32 @@ function ConfigControls({
               type,
               "active",
               config.active.filter((opt) => opt !== `${prefix}Padding`)
+            );
+          }}
+        />
+      )}
+      {config.active.includes(`${prefix}Margin`) && (
+        <FourSideIput
+          label={formatLabel(`${prefix} Margin`)}
+          configType="margin"
+          value={config.margin}
+          setSync={() => {
+            updateRoleConfig(role, type, "margin", syncConfig.margin);
+          }}
+          prefix={prefix}
+          setValue={(partialMargin) =>
+            updateRoleConfig(role, type, "margin", {
+              ...config.margin,
+              ...partialMargin,
+            })
+          }
+          onDelete={() => {
+            updateRoleConfig(role, type, "margin", defaultMargin);
+            updateRoleConfig(
+              role,
+              type,
+              "active",
+              config.active.filter((opt) => opt !== `${prefix}Margin`)
             );
           }}
         />

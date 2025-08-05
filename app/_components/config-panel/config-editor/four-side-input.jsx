@@ -33,6 +33,12 @@ export default function FourSideIput({
     { label: "Bottom", value: "bottom" },
     { label: "Left", value: "left" },
   ];
+  const borderSides = [
+    { label: "Top Left", value: "topLeft" },
+    { label: "Top Right", value: "topRight" },
+    { label: "Bottom Right", value: "bottomRight" },
+    { label: "Bottom Left", value: "bottomLeft" },
+  ];
 
   const inputMin =
     configType === "padding" || configType === "borderRadius"
@@ -66,7 +72,9 @@ export default function FourSideIput({
       <div className="grid grid-cols-4 gap-4 px-4">
         {sides.map((side) => (
           <div key={side.value} className="flex flex-col">
-            <span className="text-white/70 text-xs">{side.label}</span>
+            <span className="text-white/70 text-xs">
+              {configType === "borderRadius" ? borderSides.label : side.label}
+            </span>
             <input
               type="number"
               {...inputMin}

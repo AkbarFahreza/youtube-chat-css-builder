@@ -7,7 +7,7 @@ function OwnerChat({ contentStyle, authorNameStyle, authorMsgStyle }) {
   const makeGoogleFontLink = (style, id) => {
     if (!style?.fontFamily) return null;
     const family = style.fontFamily.replace(/['"]/g, "").split(",")[0].trim();
-    const weight = style.fontWeight || "400";
+    const weight = style.fontWeight || "500";
     const familyParam = family.replace(/\s+/g, "+");
     return {
       href: `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${weight}&display=swap`,

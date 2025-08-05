@@ -52,7 +52,7 @@ export default function Home() {
     <div className="flex flex-col min-h-[100vh] max-h-[100vh] overflow-hidden">
       <div className="grid grid-cols-[270px_minmax(500px,_1fr)_300px] gap-4 w-full">
         <div
-          className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
+          className="flex bg-main flex-col p-4 min-h-[99vh] rounded-lg shadow-sm border-r border-[#383838]"
           id="element-tree "
         >
           <div className="min-h-[90vh]">
@@ -310,7 +310,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center relative">
+          <h2 className="text-white fixed top-10 left-1/2 -translate-1/2 text-md px-4 py-2 bg-main  backdrop-blur-3xl rounded-full font-bold mb-6">
+            Youtube Chat Builder <span>v0.0.1</span>
+          </h2>
           <div className="flex flex-col p-4 h-full gap-4 justify-center px-10">
             <ViewerChat
               contentStyle={getContentStyle(
