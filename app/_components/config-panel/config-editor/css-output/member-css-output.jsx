@@ -1,23 +1,20 @@
 export const MemberCss = (member) => {
   let css = "";
-  const getPaddingString = (p) =>
-    `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
-
   const contentActive = member?.content?.active || [];
   const nameActive = member?.name?.active || [];
   const msgActive = member?.message?.active || [];
 
   // === Google Font Import ===
-  if (member.name.active.includes("memberNameFontFamily")) {
-    const fontFamilyParam = member.name.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = member.name.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-  if (member.message.active.includes("memberMsgFontFamily")) {
-    const fontFamilyParam = member.message.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = member.message.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
+  // if (member.name.active.includes("memberNameFontFamily")) {
+  //   const fontFamilyParam = member.name.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = member.name.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
+  // if (member.message.active.includes("memberMsgFontFamily")) {
+  //   const fontFamilyParam = member.message.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = member.message.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
 
   // === member Content Style ===
   if (
@@ -27,6 +24,7 @@ export const MemberCss = (member) => {
   ) {
     css += `yt-live-chat-text-message-renderer[author-type="member"] #content {\n`;
     if (contentActive.includes("modContentFlexDirection")) {
+      css += `  display: flex !important;\n`;
       css += `  flex-direction: ${member.content.flexDirection} !important;\n`;
     }
     if (contentActive.includes("memberContentMargin")) {
@@ -65,9 +63,12 @@ export const MemberCss = (member) => {
       css += `  text-align: ${member.name.textAlign} !important;\n`;
     }
     if (nameActive.includes("memberNamePadding")) {
-      css += `  padding: ${getPaddingString(
-        member.name.padding
-      )} !important;\n`;
+      const p = member.name.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (nameActive.includes("memberNameMargin")) {
+      const m = member.name.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (nameActive.includes("memberNameBgColor")) {
       css += `  background-color: ${member.name.bgColor} !important;\n`;
@@ -93,9 +94,12 @@ export const MemberCss = (member) => {
       css += `  text-align: ${member.message.textAlign} !important;\n`;
     }
     if (msgActive.includes("memberMsgPadding")) {
-      css += `  padding: ${getPaddingString(
-        member.message.padding
-      )} !important;\n`;
+      const p = member.message.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (msgActive.includes("memberMsgMargin")) {
+      const m = member.message.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (msgActive.includes("memberMsgBgColor")) {
       css += `  background-color: ${member.message.bgColor} !important;\n`;

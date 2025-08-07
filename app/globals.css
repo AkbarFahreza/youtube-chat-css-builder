@@ -38,7 +38,9 @@ rz-chat-wrapper {
   justify-content: flex-start;
   width: fit-content;
 }
-
+rz-chat-wrapper #content {
+  row-gap: 16px;
+}
 rz-chat-wrapper #author-photo {
   margin-right: 16px;
   margin-left: 16px;

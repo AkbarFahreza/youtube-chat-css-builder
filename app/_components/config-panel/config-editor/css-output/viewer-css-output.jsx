@@ -2,24 +2,9 @@
 
 export const ViewerCss = (viewer) => {
   let css = "";
-  const getPaddingString = (p) =>
-    `${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`;
-
   const contentActive = viewer?.content?.active || [];
   const nameActive = viewer?.name?.active || [];
   const msgActive = viewer?.message?.active || [];
-
-  // === Google Font Import ===
-  if (viewer.name.active.includes("nameFontFamily")) {
-    const fontFamilyParam = viewer.name.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = viewer.name.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-  if (viewer.message.active.includes("msgFontFamily")) {
-    const fontFamilyParam = viewer.message.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = viewer.message.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
 
   // === Viewer Content Style ===
   if (
@@ -27,8 +12,10 @@ export const ViewerCss = (viewer) => {
     contentActive.includes("contentMargin") ||
     contentActive.includes("contentPadding")
   ) {
+    css += `\n`;
     css += `yt-live-chat-text-message-renderer #content {\n`;
     if (contentActive.includes("contentFlexDirection")) {
+      css += `  display: flex !important;\n`;
       css += `  flex-direction: ${viewer.content.flexDirection} !important;\n`;
     }
     if (contentActive.includes("contentMargin")) {
@@ -67,9 +54,12 @@ export const ViewerCss = (viewer) => {
       css += `  text-align: ${viewer.name.textAlign} !important;\n`;
     }
     if (nameActive.includes("namePadding")) {
-      css += `  padding: ${getPaddingString(
-        viewer.name.padding
-      )} !important;\n`;
+      const p = viewer.name.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (nameActive.includes("nameMargin")) {
+      const m = viewer.name.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (nameActive.includes("nameBgColor")) {
       css += `  background-color: ${viewer.name.bgColor} !important;\n`;
@@ -95,9 +85,12 @@ export const ViewerCss = (viewer) => {
       css += `  text-align: ${viewer.message.textAlign} !important;\n`;
     }
     if (msgActive.includes("msgPadding")) {
-      css += `  padding: ${getPaddingString(
-        viewer.message.padding
-      )} !important;\n`;
+      const p = viewer.message.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (msgActive.includes("msgMargin")) {
+      const m = viewer.message.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (msgActive.includes("msgBgColor")) {
       css += `  background-color: ${viewer.message.bgColor} !important;\n`;

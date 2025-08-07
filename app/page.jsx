@@ -25,10 +25,11 @@ export default function Home() {
     padding: config.active.includes(`${prefix}Padding`)
       ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
       : undefined,
+    margin: config.active.includes(`${prefix}Margin`)
+      ? `${config.margin.top}px ${config.margin.right}px ${config.margin.bottom}px ${config.margin.left}px`
+      : undefined,
   });
   const getContentStyle = (config, prefix) => {
-    // const active = config.active || [];
-
     return {
       backgroundColor: config.active.includes(`${prefix}BgColor`)
         ? config.contentBgColor
@@ -51,7 +52,7 @@ export default function Home() {
     <div className="flex flex-col min-h-[100vh] max-h-[100vh] overflow-hidden">
       <div className="grid grid-cols-[270px_minmax(500px,_1fr)_300px] gap-4 w-full">
         <div
-          className="flex bg-main flex-col p-4 min-h-[100vh] rounded-lg shadow-sm border-r border-[#383838]"
+          className="flex bg-main flex-col p-4 min-h-[99vh] rounded-lg shadow-sm border-r border-[#383838]"
           id="element-tree "
         >
           <div className="min-h-[90vh]">
@@ -80,6 +81,7 @@ export default function Home() {
                     { label: "Background Color", value: "nameBgColor" },
                     { label: "Font Name", value: "nameFontFamily" },
                     { label: "Padding", value: "namePadding" },
+                    { label: "Margin", value: "nameMargin" },
                   ],
                   activeOptions: roleConfigs.viewer.name.active,
                   onAddOption: (opt) => {
@@ -98,6 +100,7 @@ export default function Home() {
                     { label: "Background Color", value: "msgBgColor" },
                     { label: "Font Message", value: "msgFontFamily" },
                     { label: "Padding", value: "msgPadding" },
+                    { label: "Margin", value: "msgMargin" },
                   ],
                   activeOptions: roleConfigs.viewer.message.active,
                   onAddOption: (opt) => {
@@ -137,6 +140,7 @@ export default function Home() {
                     { label: "Background Color", value: "modNameBgColor" },
                     { label: "Font Name", value: "modNameFontFamily" },
                     { label: "Padding", value: "modNamePadding" },
+                    { label: "Margin", value: "modNameMargin" },
                   ],
                   activeOptions: roleConfigs.moderator.name.active,
                   onAddOption: (opt) => {
@@ -155,6 +159,7 @@ export default function Home() {
                     { label: "Background Color", value: "modMsgBgColor" },
                     { label: "Font Name", value: "modMsgFontFamily" },
                     { label: "Padding", value: "modMsgPadding" },
+                    { label: "Margin", value: "modMsgMargin" },
                   ],
                   activeOptions: roleConfigs.moderator.message.active,
                   onAddOption: (opt) => {
@@ -199,6 +204,7 @@ export default function Home() {
                     { label: "Background Color", value: "memberNameBgColor" },
                     { label: "Font Name", value: "memberNameFontFamily" },
                     { label: "Padding", value: "memberNamePadding" },
+                    { label: "Margin", value: "memberNameMargin" },
                   ],
                   activeOptions: roleConfigs.member.name.active,
                   onAddOption: (opt) => {
@@ -217,6 +223,7 @@ export default function Home() {
                     { label: "Background Color", value: "memberMsgBgColor" },
                     { label: "Font Message", value: "memberMsgFontFamily" },
                     { label: "Padding", value: "memberMsgPadding" },
+                    { label: "Margin", value: "memberMsgMargin" },
                   ],
                   activeOptions: roleConfigs.member.message.active,
                   onAddOption: (opt) => {
@@ -258,6 +265,7 @@ export default function Home() {
                     { label: "Background Color", value: "ownerNameBgColor" },
                     { label: "Font Name", value: "ownerNameFontFamily" },
                     { label: "Padding", value: "ownerNamePadding" },
+                    { label: "Margin", value: "ownerNameMargin" },
                   ],
                   activeOptions: roleConfigs.owner.name.active,
                   onAddOption: (opt) => {
@@ -276,6 +284,7 @@ export default function Home() {
                     { label: "Background Color", value: "ownerMsgBgColor" },
                     { label: "Font Message", value: "ownerMsgFontFamily" },
                     { label: "Padding", value: "ownerMsgPadding" },
+                    { label: "Margin", value: "ownerMsgMargin" },
                   ],
                   activeOptions: roleConfigs.owner.message.active,
                   onAddOption: (opt) => {
@@ -301,7 +310,10 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center relative">
+          <h2 className="text-white fixed top-10 left-1/2 -translate-1/2 text-md px-4 py-2 bg-main  backdrop-blur-3xl rounded-full font-bold mb-6">
+            Youtube Chat Builder <span>v0.0.1</span>
+          </h2>
           <div className="flex flex-col p-4 h-full gap-4 justify-center px-10">
             <ViewerChat
               contentStyle={getContentStyle(

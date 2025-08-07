@@ -10,16 +10,16 @@ export const ModeratorCss = (moderator) => {
   const msgActive = moderator?.message?.active || [];
 
   // === Google Font Import ===
-  if (moderator.name.active.includes("modNameFontFamily")) {
-    const fontFamilyParam = moderator.name.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = moderator.name.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
-  if (moderator.message.active.includes("modMsgFontFamily")) {
-    const fontFamilyParam = moderator.message.fontFamily?.replace(/ /g, "+");
-    const fontWeightParam = moderator.message.fontWeight || "400";
-    css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
-  }
+  // if (moderator.name.active.includes("modNameFontFamily")) {
+  //   const fontFamilyParam = moderator.name.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = moderator.name.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
+  // if (moderator.message.active.includes("modMsgFontFamily")) {
+  //   const fontFamilyParam = moderator.message.fontFamily?.replace(/ /g, "+");
+  //   const fontWeightParam = moderator.message.fontWeight || "500";
+  //   css += `@import url('https://fonts.googleapis.com/css2?family=${fontFamilyParam}:wght@${fontWeightParam}&display=swap');\n`;
+  // }
 
   // === moderator Content Style ===
   if (
@@ -29,6 +29,7 @@ export const ModeratorCss = (moderator) => {
   ) {
     css += `yt-live-chat-text-message-renderer[author-type="moderator"] #content {\n`;
     if (contentActive.includes("modContentFlexDirection")) {
+      css += `  display: flex !important;\n`;
       css += `  flex-direction: ${moderator.content.flexDirection} !important;\n`;
     }
     if (contentActive.includes("modContentMargin")) {
@@ -67,9 +68,12 @@ export const ModeratorCss = (moderator) => {
       css += `  text-align: ${moderator.name.textAlign} !important;\n`;
     }
     if (nameActive.includes("modNamePadding")) {
-      css += `  padding: ${getPaddingString(
-        moderator.name.padding
-      )} !important;\n`;
+      const p = moderator.name.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (nameActive.includes("modNameMargin")) {
+      const m = moderator.name.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (nameActive.includes("modNameBgColor")) {
       css += `  background-color: ${moderator.name.bgColor} !important;\n`;
@@ -95,9 +99,12 @@ export const ModeratorCss = (moderator) => {
       css += `  text-align: ${moderator.message.textAlign} !important;\n`;
     }
     if (msgActive.includes("modMsgPadding")) {
-      css += `  padding: ${getPaddingString(
-        moderator.message.padding
-      )} !important;\n`;
+      const p = moderator.message.padding;
+      css += `  padding: ${p.top}px ${p.right}px ${p.bottom}px ${p.left}px !important;\n`;
+    }
+    if (msgActive.includes("modMsgMargin")) {
+      const m = moderator.message.margin;
+      css += `  margin: ${m.top}px ${m.right}px ${m.bottom}px ${m.left}px !important;\n`;
     }
     if (msgActive.includes("modMsgBgColor")) {
       css += `  background-color: ${moderator.message.bgColor} !important;\n`;
