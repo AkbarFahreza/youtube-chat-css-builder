@@ -25,20 +25,25 @@ export default function Home() {
     padding: config.active.includes(`${prefix}Padding`)
       ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
       : undefined,
-    margin: config.active.includes(`${prefix}Margin`)
-      ? `${config.margin.top}px ${config.margin.right}px ${config.margin.bottom}px ${config.margin.left}px`
-      : undefined,
   });
   const getContentStyle = (config, prefix) => {
     return {
       backgroundColor: config.active.includes(`${prefix}BgColor`)
-        ? config.contentBgColor
+        ? config.bgColor
         : undefined,
 
       display: config.avatar || "block",
       flexDirection: config.flexDirection || "row",
       margin: config.active.includes(`${prefix}Margin`)
-        ? `${config.margin.top}px ${config.margin.right}px ${config.margin.bottom}px ${config.margin.left}px`
+        ? `${config.margin.top}px ${
+            config.margin.right != "auto"
+              ? config.margin.right + "px"
+              : config.margin.right
+          } ${config.margin.bottom}px ${
+            config.margin.left != "auto"
+              ? config.margin.left + "px"
+              : config.margin.left
+          }`
         : undefined,
       padding: config.active.includes(`${prefix}Padding`)
         ? `${config.padding.top}px ${config.padding.right}px ${config.padding.bottom}px ${config.padding.left}px`
