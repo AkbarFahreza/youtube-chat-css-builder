@@ -6,6 +6,7 @@ import FontEditor from "./config-editor/font-config";
 import { OptionsSelector } from "./config-editor/options-selector";
 import CssOutput from "./css-output";
 import FourSideIput from "./config-editor/four-side-input";
+import MarginConfig from "./config-editor/margin-config";
 
 function formatLabel(text) {
   const withSpaces = text.replace(/([A-Z])/g, " $1").trim();
@@ -17,7 +18,7 @@ export default function ConfigWrapper({ roleConfigs, updateRoleConfig }) {
   return (
     <div
       id="config-wrapper"
-      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-secondary rounded-lg"
+      className="max-w-[400px] bg-main flex-1 border-l pt-3 border-secondary "
     >
       <div className="flex flex-row gap-1 pb-2 px-3">
         {["design", "output"].map((m) => (
@@ -85,7 +86,7 @@ function ConfigControls({
     [
       ["fontFamily", "Inter"],
       ["fontColor", defaultColor],
-      ["fontWeight", "500"],
+      ["fontWeight", "400"],
       ["lineHeight", ""],
       ["textAlign", "left"],
       ["fontSize", 15],
@@ -105,8 +106,8 @@ function ConfigControls({
     { label: "Show", value: "block" },
     { label: "Hide", value: "none" },
   ];
-  const defaultMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-  const defaultPadding = { top: 2, right: 2, bottom: 2, left: 2 };
+  const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
+  const defaultMargin = { top: 2, right: 2, bottom: 2, left: 2 };
 
   return (
     <>
@@ -215,7 +216,6 @@ function ConfigControls({
       {config.active.includes(`${prefix}Padding`) && (
         <FourSideIput
           label={formatLabel(`${prefix} Padding`)}
-          configType="padding"
           value={config.padding}
           setSync={() => {
             updateRoleConfig(role, type, "padding", syncConfig.padding);
@@ -238,10 +238,10 @@ function ConfigControls({
           }}
         />
       )}
+
       {config.active.includes(`${prefix}Margin`) && (
-        <FourSideIput
+        <MarginConfig
           label={formatLabel(`${prefix} Margin`)}
-          configType="margin"
           value={config.margin}
           setSync={() => {
             updateRoleConfig(role, type, "margin", syncConfig.margin);
@@ -449,19 +449,22 @@ function ChatConfigPanel({ roleConfigs, updateRoleConfig }) {
       )}
 
       {/* Show fallback if nothing is active */}
-      {!hasViewerConfig && !hasModConfig && !hasMemberConfig && (
-        <div className="px-5 flex flex-col justify-center items-center h-[90vh]">
-          <div className="text-white/40 mx-auto text-sm text-center py-4 leading-snug whitespace-pre">
-            {` ╱|、
+      {!hasViewerConfig &&
+        !hasModConfig &&
+        !hasMemberConfig &&
+        !hasOwnerConfig && (
+          <div className="px-5 flex flex-col justify-center items-center h-[90vh]">
+            <div className="text-white/40 mx-auto text-sm text-center py-4 leading-snug whitespace-pre">
+              {` ╱|、
 (˚ˎ 。7  
          |、˜〵          
   じしˍ,)ノ`}
+            </div>
+            <p className="text-white/40 mx-auto text-sm text-center">
+              No configs were added, try to add from left panel
+            </p>
           </div>
-          <p className="text-white/40 mx-auto text-sm text-center">
-            No configs were added, try to add from left panel
-          </p>
-        </div>
-      )}
+        )}
     </div>
   );
 }

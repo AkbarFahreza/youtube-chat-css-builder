@@ -11,7 +11,7 @@ export const OwnerCss = (owner) => {
     contentActive.includes("ownerContentPadding")
   ) {
     css += `yt-live-chat-text-message-renderer[author-type="owner"] #content {\n`;
-    if (contentActive.includes("modContentFlexDirection")) {
+    if (contentActive.includes("ownerContentFlexDirection")) {
       css += `  display: flex !important;\n`;
       css += `  flex-direction: ${owner.content.flexDirection} !important;\n`;
     }
